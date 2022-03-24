@@ -5,11 +5,17 @@ import { Load } from '@components/Animations/Load';
 import { Filters } from '@components/Controllers/Filters';
 import { Order, OrderProps } from '@components/Controllers/Order';
 import { Container, Header, Title, Counter } from './styles';
+import { ConfigurationForm } from '@components/Forms/ConfigurationForm';
+import { QrCode } from '@components/Forms/QrCodeForm';
+
+
+
 
 export function Orders() {
-  const [status, setStatus] = useState('open');
+  const [status, setStatus] = useState('Itens');
   const [isLoading, setIsLoading] = useState(false);
   const [orders, setOrders] = useState<OrderProps[]>([]);
+
 
   // useEffect(() => {
   //   setIsLoading(true);
@@ -20,9 +26,13 @@ export function Orders() {
       <Filters onFilter={setStatus} />
 
       <Header>
-        <Title>Items {status === 'open' ? '' : ''}</Title>
-        <Counter>{orders.length}</Counter>
+        <Title> {status}</Title>
+        {status === 'Itens' ? <Counter>{orders.length}</Counter> : <Counter />}
       </Header>
+      
+      {status === 'Configuração' ? <ConfigurationForm /> : status === 'Link e QrCode'? <QrCode /> : <Counter />}
+
+
 
       {
         isLoading ?
@@ -35,7 +45,8 @@ export function Orders() {
             showsVerticalScrollIndicator={false}
             style={{ flex: 1 }}
           />
-      }
+      } 
+ 
     </Container>
   );
 }

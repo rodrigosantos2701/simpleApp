@@ -19,13 +19,19 @@ export function Filters({ onFilter }: Props) {
         <Filter
           title="Configuração"
           backgroundColor={theme.COLORS.SECONDARY}
-          onPress={() => onFilter('open')}
+          onPress={() => onFilter('Configuração')}
+        />
+        <Filter
+          title="Link e QrCode"
+          backgroundColor={theme.COLORS.QRCODE}
+          onPress={() => onFilter('Link e QrCode')}
         />
 
+
         <Filter
-          title="Cadastro"
+          title="Itens"
           backgroundColor={theme.COLORS.PRIMARY}
-          onPress={() => onFilter('closed')}
+          onPress={() => onFilter('Itens')}
         />
       </Options>
     </Container>

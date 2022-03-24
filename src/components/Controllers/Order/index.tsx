@@ -17,9 +17,9 @@ import {
 
 export type OrderProps = OrderStyleProps & {
   id: string;
-  patrimony: string;
-  equipment: string;
+  name: string;
   description: string;
+  price: number;
 }
 
 type Props = {

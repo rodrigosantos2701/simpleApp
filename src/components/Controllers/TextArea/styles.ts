@@ -13,6 +13,6 @@ export const Container = styled(TextInput).attrs<TextInputProps>(({ theme }) => 
   padding-left: 20px;
   margin-bottom: 16px;
   font-family: ${({ theme }) => theme.FONTS.TEXT};
-  border: 1px solid ${({ theme }) => theme.COLORS.BORDER};
+  border: 1px solid ${props => props.editable? ({ theme }) => theme.COLORS.BLACK : ({ theme }) => theme.COLORS.BORDER };
   color: ${({ theme }) => theme.COLORS.TEXT};
 `;

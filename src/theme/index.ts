@@ -9,7 +9,9 @@ export default {
     SUBTEXT: '#8D919E',
 
     WHITE: '#FFFFFF',
-    BORDER: '#C5CADA'
+    BORDER: '#C5CADA',
+    BLACK: '#222222',
+    QRCODE: '#128C7E'
   },
 
   FONTS: {
