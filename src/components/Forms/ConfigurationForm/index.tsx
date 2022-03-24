@@ -10,35 +10,36 @@ import { SaveButton } from '@components/Controllers/SaveButton';
 import { Alert } from 'react-native';
 
 
-const auth = getAuth();
-const user = auth.currentUser;
 
 export function ConfigurationForm() {
   const [company, setCompany] = useState('');
   const [description, setDescription] = useState('');
   const [whats, setWhats] = useState('');
   const [editable, setEditable] = useState(false)
-  const [userId, setUserId] = useState(user?.uid || '')
-
-
-
+  const [userId, setUserId] = useState('')
+  const auth = getAuth();
+  const user = auth.currentUser;
 
   useEffect(() => {
     handleGetDataConfigurations()
-  }, [])
+  }, [user])
 
 
   async function handleGetDataConfigurations() {
-    const docRef = doc(db, userId, 'config');
-    const docSnap = await getDoc(docRef);
-    if (docSnap.exists()) {
-      const config = docSnap.data()
-      const configData = config
-      setCompany(configData.company)
-      setDescription(configData.description)
-      setWhats(configData.whats)
-    } else {
-      console.log("USEEFFECTS: Nenhum Dado");
+    if (user) {
+      const docRef = doc(db, user.uid, 'config');
+      const docSnap = await getDoc(docRef);
+      setUserId(user.uid)
+
+      if (docSnap.exists()) {
+        const config = docSnap.data()
+        const configData = config
+        setCompany(configData.company)
+        setDescription(configData.description)
+        setWhats(configData.whats)
+      } else {
+        console.log('empty database');
+      }
     }
   }
 
