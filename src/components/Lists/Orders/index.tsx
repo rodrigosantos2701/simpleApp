@@ -32,8 +32,6 @@ export function Orders() {
       
       {status === 'Configuração' ? <ConfigurationForm /> : status === 'Link e QrCode'? <QrCode /> : <Counter />}
 
-
-
       {
         isLoading ?
           <Load />

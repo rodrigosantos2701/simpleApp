@@ -31,8 +31,6 @@ export function OrderForm() {
   }
 
 
-
-
   async function handleNewOrder() {
     setIsLoading(true)
     try {
@@ -57,7 +55,7 @@ export function OrderForm() {
     <Form>
       <Title>Novo Produto/Serviço</Title>
       <Input placeholder="Nome" onChangeText={setName} value={name}/>
-      <TextArea placeholder="Descrição" onChangeText={setDescription} value={description} />
+      <Input placeholder="Descrição" onChangeText={setDescription} value={description} />
       <Input placeholder="Preço" onChangeText={setPrice} value={price}/>
       <Input placeholder="Imagem" />
 

@@ -2,15 +2,18 @@ import React, { useEffect, useState } from 'react';
 import { collection, addDoc, setDoc, doc, getDoc } from "firebase/firestore";
 import { db } from '../../../services/firebase';
 import { getAuth } from "firebase/auth";
+import { getStorage, ref } from "firebase/storage";
 import { Form, TextInfo, Container, ButtonContainer } from './styles';
 import { Input } from '@components/Controllers/Input';
 import { InputPhone } from '@components/Controllers/InputPhone';
-
+import * as ImagePicker from 'expo-image-picker';
+import Picker from '../../Controllers/ImagePicker';
 import { EditButton } from '@components/Controllers/EditButton';
 import { SaveButton } from '@components/Controllers/SaveButton';
-import { Alert } from 'react-native';
+import { Alert, View } from 'react-native';
 import MaskInput from 'react-native-mask-input';
-
+import useStorage from '../../../hooks/useStorage';
+import { Button } from '@components/Controllers/Button';
 
 
 export function ConfigurationForm() {
@@ -19,8 +22,11 @@ export function ConfigurationForm() {
   const [whats, setWhats] = useState('');
   const [editable, setEditable] = useState(false)
   const [userId, setUserId] = useState('')
+  const [file, setFile] = useState();
   const auth = getAuth();
   const user = auth.currentUser;
+  const storage = getStorage();
+
 
   useEffect(() => {
     handleGetDataConfigurations()
@@ -60,29 +66,31 @@ export function ConfigurationForm() {
 
 
   return (
-    <Container>
-      <ButtonContainer>
-        <TextInfo>{editable ? 'Salvar' : 'Editar'}</TextInfo>
+    <View>
+      <Container>
+        <ButtonContainer>
+          <TextInfo>{editable ? 'Salvar' : 'Editar'}</TextInfo>
 
-        {editable
-          ? <SaveButton onPress={handleSaveConfigurations} />
-          : <EditButton onPress={() => setEditable(!editable)} />
-        }
-      </ButtonContainer>
-      <Form>
-        <Input editable={editable} placeholder="Empresa" onChangeText={setCompany} value={company} />
-        <Input editable={editable} placeholder="Descrição" onChangeText={setDescription} value={description} />
-        {/* <Input editable={editable} placeholder="WhastApp" onChangeText={setWhats} value={whats} ></Input> */}
-        
-        <InputPhone 
-          editable={editable} 
-          placeholder="WhatsApp" 
-          onChangeText={(masked: any, unmasked: any) => {setWhats(masked); }} 
-          mask={['(', /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/]} 
-          value={whats} />
-        <Input editable={editable} placeholder="Logo" />
-
-      </Form>
-    </Container>
+          {editable
+            ? <SaveButton onPress={handleSaveConfigurations} />
+            : <EditButton onPress={() => setEditable(!editable)} />
+          }
+        </ButtonContainer>
+        <Form>
+          <Input editable={editable} placeholder="Empresa" onChangeText={setCompany} value={company} />
+          <Input editable={editable} placeholder="Descrição" onChangeText={setDescription} value={description} />
+          <InputPhone
+            editable={editable}
+            placeholder="WhatsApp"
+            onChangeText={(masked: any, unmasked: any) => { setWhats(masked); }}
+            mask={['(', /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/]}
+            value={whats}
+          />
+          <View>
+            <Picker />
+          </View>
+        </Form>
+      </Container>
+    </View>
   );
 }
