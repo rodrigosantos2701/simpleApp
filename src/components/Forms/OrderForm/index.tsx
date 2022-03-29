@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { collection, addDoc } from "firebase/firestore";
-import { db } from '../../../services/firebase';
+import { firestore } from '../../../services/firebase';
 import { getAuth } from "firebase/auth";
 
 
@@ -34,7 +34,7 @@ export function OrderForm() {
   async function handleNewOrder() {
     setIsLoading(true)
     try {
-      const docRef = await addDoc(collection(db, userId,), {
+      const docRef = await addDoc(collection(firestore, userId,), {
         name,
         description,
         price

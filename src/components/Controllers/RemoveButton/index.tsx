@@ -5,12 +5,12 @@ import { MaterialIcons } from '@expo/vector-icons';
 
 import { Container } from './styles';
 
-export function RemoveButton({ ...rest }: RectButtonProps) {
+export function RemoveButton({ enabled, ...rest }: RectButtonProps) {
   const { COLORS } = useTheme();
 
   return (
     <Container {...rest}>
-      <MaterialIcons name="remove-circle-outline" size={22} color={COLORS.BLACK} />
+      <MaterialIcons name="remove-circle-outline" size={22} color={enabled? COLORS.BLACK: COLORS.BORDER} />
     </Container>
   )
 }

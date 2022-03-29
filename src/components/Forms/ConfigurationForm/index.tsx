@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { collection, addDoc, setDoc, doc, getDoc } from "firebase/firestore";
-import { db } from '../../../services/firebase';
+import { firestore } from '../../../services/firebase';
 import { getAuth } from "firebase/auth";
-import { getStorage, ref } from "firebase/storage";
+import { getStorage, ref, getDownloadURL, uploadBytes } from "firebase/storage";
 import { Form, TextInfo, Container, ButtonContainer } from './styles';
 import { Input } from '@components/Controllers/Input';
 import { InputPhone } from '@components/Controllers/InputPhone';
@@ -10,10 +10,12 @@ import * as ImagePicker from 'expo-image-picker';
 import Picker from '../../Controllers/ImagePicker';
 import { EditButton } from '@components/Controllers/EditButton';
 import { SaveButton } from '@components/Controllers/SaveButton';
-import { Alert, View } from 'react-native';
+import { Alert, View, Image } from 'react-native';
 import MaskInput from 'react-native-mask-input';
-import useStorage from '../../../hooks/useStorage';
 import { Button } from '@components/Controllers/Button';
+// import useStorage from '../../../hooks/useStorage';
+
+
 
 
 export function ConfigurationForm() {
@@ -22,10 +24,11 @@ export function ConfigurationForm() {
   const [whats, setWhats] = useState('');
   const [editable, setEditable] = useState(false)
   const [userId, setUserId] = useState('')
-  const [file, setFile] = useState();
+  const [logo, setLogo] = useState('');
   const auth = getAuth();
   const user = auth.currentUser;
-  const storage = getStorage();
+  const [resultImg, setResultImg] = useState<any>();
+
 
 
   useEffect(() => {
@@ -35,8 +38,9 @@ export function ConfigurationForm() {
 
   async function handleGetDataConfigurations() {
     if (user) {
-      const docRef = doc(db, user.uid, 'config');
+      const docRef = doc(firestore, user.uid, 'config');
       const docSnap = await getDoc(docRef);
+
       setUserId(user.uid)
 
       if (docSnap.exists()) {
@@ -45,32 +49,35 @@ export function ConfigurationForm() {
         setCompany(configData.company)
         setDescription(configData.description)
         setWhats(configData.whats)
+        setLogo(configData.logo)
       } else {
         console.log('empty database');
       }
     }
   }
 
-
   async function handleSaveConfigurations() {
-    const docRef = doc(db, userId, 'config');
-    const companyRef = collection(db, userId);
+    const docRef = doc(firestore, userId, 'config');
+    const companyRef = collection(firestore, userId);
+    const storage = getStorage();
+    const storageRef = ref(storage, userId + '/logo.jpg');
+    await uploadBytes(storageRef, resultImg)
     await setDoc(doc(companyRef, 'config'), {
       company,
       description,
-      whats
+      whats,
+      logo
     })
     Alert.alert(("Salvo com sucesso!"))
     setEditable(false)
-  }
 
+  }
 
   return (
     <View>
       <Container>
         <ButtonContainer>
           <TextInfo>{editable ? 'Salvar' : 'Editar'}</TextInfo>
-
           {editable
             ? <SaveButton onPress={handleSaveConfigurations} />
             : <EditButton onPress={() => setEditable(!editable)} />
@@ -86,9 +93,9 @@ export function ConfigurationForm() {
             mask={['(', /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/]}
             value={whats}
           />
-          <View>
-            <Picker />
-          </View>
+        <View>
+          <Picker editable={editable} setLogo={setLogo} logo={logo} />
+        </View>
         </Form>
       </Container>
     </View>

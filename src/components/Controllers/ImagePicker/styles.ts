@@ -33,6 +33,7 @@ export const ButtonContainer = styled.View`
   width: 100%;
   align-items: flex-start;
   flex-direction: row;
+  padding-top: 2%;
 `;
 
 

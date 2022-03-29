@@ -8,4 +8,5 @@ export const Container = styled(RectButton)`
   align-items: center;
   border-radius: 12px;                 
   background-color: ${({ theme }) => theme.COLORS.WHITE};
+  
 `;

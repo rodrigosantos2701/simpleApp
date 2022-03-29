@@ -12,37 +12,41 @@ import { RemoveButton } from '../RemoveButton';
 
 const mock = {
   title: 'Add Logo ',
-  // price: '1.439,90',
   description: 'Descricão pequena do produto.'
 }
 
-export default function Picker() {
+export default function Picker({editable, setLogo, logo, setResultImg}: any) {
   const [image, setImage] = useState<any | null>(null);
+  
 
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
+    if (editable === true) {
+      let result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.All,
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 1,
+      });
+  
+      if (!result.cancelled) {
+        console.log('result ==> ',result);
 
-    console.log(result);
-
-    if (!result.cancelled) {
-      setImage(result.uri);
+        setImage(result.uri);
+        setLogo(result.uri)
+      }
     }
+    
   };
 
   return (
     <Container >
-      {image && <Image source={{ uri: image }} style={{ width: 100, height: 100 }} />}
+      {logo ? <Image source={{ uri: logo }} style={{ width: 100, height: 100 }} />: <TextTitle></TextTitle>}
       <Box>
-        <TextTitle>{mock.title}</TextTitle>
+        <TextTitle >{mock.title}</TextTitle>
         <ButtonContainer>
-        <AddButton onPress={pickImage} />
-        <RemoveButton onPress={() => setImage(null)} />
+          <AddButton enabled={editable} onPress={pickImage} />
+          <RemoveButton enabled={editable} onPress={() => setImage(null)} />
         </ButtonContainer>
       </Box>
     </Container>

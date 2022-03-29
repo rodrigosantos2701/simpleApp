@@ -9,4 +9,5 @@ export const Container = styled(RectButton)`
   border-radius: 12px;                 
   background-color: ${({ theme }) => theme.COLORS.WHITE};
   flex-direction: row;
+  margin: 0 3% 0 0;
 `;
