@@ -15,10 +15,9 @@ const mock = {
   description: 'Descricão pequena do produto.'
 }
 
-export default function Picker({editable, setLogo, logo, setResultImg}: any) {
-  const [image, setImage] = useState<any | null>(null);
-  
+export default function Picker({ editable, setLogo, logo, url }: any) {
 
+ 
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
     if (editable === true) {
@@ -28,25 +27,24 @@ export default function Picker({editable, setLogo, logo, setResultImg}: any) {
         aspect: [4, 3],
         quality: 1,
       });
-  
-      if (!result.cancelled) {
-        console.log('result ==> ',result);
 
-        setImage(result.uri);
+      if (!result.cancelled) {
         setLogo(result.uri)
       }
     }
-    
+
   };
 
   return (
     <Container >
-      {logo ? <Image source={{ uri: logo }} style={{ width: 100, height: 100 }} />: <TextTitle></TextTitle>}
+      {logo ? <Image source={{ uri: logo }} style={{ width: 100, height: 100 }} />
+       : url ? <Image source={{ uri: url }} style={{ width: 100, height: 100 }} /> 
+       : <TextTitle></TextTitle>}
       <Box>
         <TextTitle >{mock.title}</TextTitle>
         <ButtonContainer>
           <AddButton enabled={editable} onPress={pickImage} />
-          <RemoveButton enabled={editable} onPress={() => setImage(null)} />
+          <RemoveButton enabled={editable} onPress={() => setLogo(null)} />
         </ButtonContainer>
       </Box>
     </Container>

@@ -24,12 +24,15 @@ export function ConfigurationForm() {
   const [whats, setWhats] = useState('');
   const [editable, setEditable] = useState(false)
   const [userId, setUserId] = useState('')
-  const [logo, setLogo] = useState('');
+  const [logo, setLogo] = useState<any>();
+  const [url, setUrl] = useState('');
+
   const auth = getAuth();
   const user = auth.currentUser;
-  const [resultImg, setResultImg] = useState<any>();
 
-
+  useEffect(() => {
+    setLogo(null)
+  },[url])
 
   useEffect(() => {
     handleGetDataConfigurations()
@@ -49,7 +52,7 @@ export function ConfigurationForm() {
         setCompany(configData.company)
         setDescription(configData.description)
         setWhats(configData.whats)
-        setLogo(configData.logo)
+        setUrl(configData.url)
       } else {
         console.log('empty database');
       }
@@ -61,12 +64,23 @@ export function ConfigurationForm() {
     const companyRef = collection(firestore, userId);
     const storage = getStorage();
     const storageRef = ref(storage, userId + '/logo.jpg');
-    await uploadBytes(storageRef, resultImg)
+
+    //Convert img 
+    const img = await fetch(logo)
+    const bytes = await img.blob()
+    await uploadBytes(storageRef, bytes)
+
+    //getURL
+    const url = await getDownloadURL(ref(storage, userId + '/logo.jpg'))
+
+    setUrl(url)
+
     await setDoc(doc(companyRef, 'config'), {
       company,
       description,
       whats,
-      logo
+      url
+
     })
     Alert.alert(("Salvo com sucesso!"))
     setEditable(false)
@@ -93,9 +107,9 @@ export function ConfigurationForm() {
             mask={['(', /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/]}
             value={whats}
           />
-        <View>
-          <Picker editable={editable} setLogo={setLogo} logo={logo} />
-        </View>
+          <View>
+            <Picker editable={editable} setLogo={setLogo} logo={logo} url={url}/>
+          </View>
         </Form>
       </Container>
     </View>
