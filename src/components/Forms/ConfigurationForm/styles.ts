@@ -4,6 +4,12 @@ export const Form = styled.View`
   width: 100%;
 `;
 
+export const Container = styled.View`
+  width: 100%;
+  align-items: flex-end;
+
+`;
+
 export const TextInfo = styled.Text`
   font-size: 16px;
   font-family: ${({ theme }) => theme.FONTS.TITLE};
@@ -12,11 +18,6 @@ export const TextInfo = styled.Text`
   align-self: center;
 `;
 
-export const Container = styled.View`
-  width: 100%;
-  align-items: flex-end;
-
-`;
 
 export const ButtonContainer = styled.View`
   margin-bottom: 15px;

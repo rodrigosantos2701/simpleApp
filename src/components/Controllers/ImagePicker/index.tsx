@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { Image, View, Platform } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { AddButton } from '../AddButton';
+import { Load } from '../../Animations/Load'
 
-import { TextTitle, Container, Box, ButtonContainer, TextDescription } from './styles';
+import { TextTitle, Container, Box, ButtonContainer, TextDescription, ContainerLoader } from './styles';
 
 
 import { Button } from '../Button';
@@ -15,7 +16,7 @@ const mock = {
   description: 'Descricão pequena do produto.'
 }
 
-export default function Picker({ editable, setLogo, logo, url }: any) {
+export default function Picker({ editable, setLogo, logo, url, isLoading }: any) {
 
  
   const pickImage = async () => {
@@ -37,9 +38,12 @@ export default function Picker({ editable, setLogo, logo, url }: any) {
 
   return (
     <Container >
-      {logo ? <Image source={{ uri: logo }} style={{ width: 100, height: 100 }} />
-       : url ? <Image source={{ uri: url }} style={{ width: 100, height: 100 }} /> 
-       : <TextTitle></TextTitle>}
+      {isLoading?<ContainerLoader><Load /></ContainerLoader> 
+      :
+      logo ? <Image source={{ uri: logo }} style={{ width: 100, height: 100 }} />
+      : url ? <Image source={{ uri: url }} style={{ width: 100, height: 100 }} /> 
+      : <TextTitle></TextTitle>
+    }
       <Box>
         <TextTitle >{mock.title}</TextTitle>
         <ButtonContainer>

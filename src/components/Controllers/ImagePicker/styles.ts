@@ -1,4 +1,5 @@
 import styled from 'styled-components/native';
+import { Load } from '../../Animations/Load'
 
 
 export const Container = styled.View`
@@ -36,4 +37,8 @@ export const ButtonContainer = styled.View`
   padding-top: 2%;
 `;
 
-
+export const ContainerLoader = styled.View`
+  width: 100px;
+  height: 100px;
+  align-items: center;
+`;

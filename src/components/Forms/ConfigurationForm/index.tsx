@@ -1,21 +1,21 @@
 import React, { useEffect, useState } from 'react';
+
 import { collection, addDoc, setDoc, doc, getDoc } from "firebase/firestore";
 import { firestore } from '../../../services/firebase';
 import { getAuth } from "firebase/auth";
 import { getStorage, ref, getDownloadURL, uploadBytes } from "firebase/storage";
+
 import { Form, TextInfo, Container, ButtonContainer } from './styles';
+import { Alert, View, Image } from 'react-native';
+import MaskInput from 'react-native-mask-input';
+
 import { Input } from '@components/Controllers/Input';
 import { InputPhone } from '@components/Controllers/InputPhone';
 import * as ImagePicker from 'expo-image-picker';
 import Picker from '../../Controllers/ImagePicker';
 import { EditButton } from '@components/Controllers/EditButton';
 import { SaveButton } from '@components/Controllers/SaveButton';
-import { Alert, View, Image } from 'react-native';
-import MaskInput from 'react-native-mask-input';
 import { Button } from '@components/Controllers/Button';
-// import useStorage from '../../../hooks/useStorage';
-
-
 
 
 export function ConfigurationForm() {
@@ -26,6 +26,8 @@ export function ConfigurationForm() {
   const [userId, setUserId] = useState('')
   const [logo, setLogo] = useState<any>();
   const [url, setUrl] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
+
 
   const auth = getAuth();
   const user = auth.currentUser;
@@ -49,11 +51,15 @@ export function ConfigurationForm() {
         setDescription(configData.description)
         setWhats(configData.whats)
         setUrl(configData.url)
+        
       } else {
         console.log('empty database');
       }
     }
+    setIsLoading(false)
   }
+
+
 
   async function handleSaveConfigurations() {
     const docRef = doc(firestore, userId, 'config');
@@ -68,7 +74,7 @@ export function ConfigurationForm() {
 
     // //getURL
     const url = await getDownloadURL(ref(storage, userId + '/logo.jpg'))
-
+    
     setUrl(url)
     setLogo(null)
 
@@ -90,7 +96,8 @@ export function ConfigurationForm() {
         <ButtonContainer>
           <TextInfo>{editable ? 'Salvar' : 'Editar'}</TextInfo>
           {editable
-            ? <SaveButton onPress={handleSaveConfigurations} />
+            ? 
+             <SaveButton onPress={handleSaveConfigurations} />
             : <EditButton onPress={() => setEditable(!editable)} />
           }
         </ButtonContainer>
@@ -105,7 +112,7 @@ export function ConfigurationForm() {
             value={whats}
           />
           <View>
-            <Picker editable={editable} setLogo={setLogo} logo={logo} url={url}/>
+            <Picker editable={editable} setLogo={setLogo} logo={logo} url={url} isLoading={isLoading} />
           </View>
         </Form>
       </Container>

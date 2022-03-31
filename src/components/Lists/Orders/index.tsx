@@ -32,7 +32,7 @@ export function Orders() {
       
       {status === 'Configuração' ? <ConfigurationForm /> : status === 'Link e QrCode'? <QrCode /> : <Counter />}
 
-      {
+      {/* {
         isLoading ?
           <Load />
           : <FlatList
@@ -43,7 +43,7 @@ export function Orders() {
             showsVerticalScrollIndicator={false}
             style={{ flex: 1 }}
           />
-      } 
+      }  */}
  
     </Container>
   );
