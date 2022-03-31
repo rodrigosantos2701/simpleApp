@@ -31,10 +31,6 @@ export function ConfigurationForm() {
   const user = auth.currentUser;
 
   useEffect(() => {
-    setLogo(null)
-  },[url])
-
-  useEffect(() => {
     handleGetDataConfigurations()
   }, [user])
 
@@ -70,10 +66,11 @@ export function ConfigurationForm() {
     const bytes = await img.blob()
     await uploadBytes(storageRef, bytes)
 
-    //getURL
+    // //getURL
     const url = await getDownloadURL(ref(storage, userId + '/logo.jpg'))
 
     setUrl(url)
+    setLogo(null)
 
     await setDoc(doc(companyRef, 'config'), {
       company,
