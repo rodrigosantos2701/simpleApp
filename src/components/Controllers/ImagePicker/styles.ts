@@ -1,5 +1,4 @@
 import styled from 'styled-components/native';
-import { Load } from '../../Animations/Load'
 
 
 export const Container = styled.View`

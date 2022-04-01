@@ -6,55 +6,44 @@ export type OrderStyleProps = {
 
 export const Container = styled.View`
   width: 100%;
-  height: 94px;
-  flex-direction: row;
-  overflow: hidden;
-  margin-bottom: 16px;
-`;
-
-export const Content = styled.View`
-  flex: 1;
-  height: 94px;
-  padding: 0 15px;
-  justify-content: center;
-  background-color: ${({ theme }) => theme.COLORS.WHITE};
-  border-radius: 10px;
-`;
-
-export const Header = styled.View`
+  align-items: center;
   flex-direction: row;
 `;
 
-export const Status = styled.View<OrderStyleProps>`
-  width: 10px;
-  height: 94px;
-  background-color: ${({ theme, status }) => status === 'open' ? theme.COLORS.SECONDARY : theme.COLORS.PRIMARY};
+export const Box = styled.View`
+  width: 100%;
+  align-items: flex-start;
+  margin-left: 5%;
+  padding: 3%;
 `;
 
-export const Title = styled.Text`
-  flex: 1;
-  font-size: 18px;
+export const TextTitle = styled.Text`
+  font-size: 16px;
   font-family: ${({ theme }) => theme.FONTS.TITLE};
   color: ${({ theme }) => theme.COLORS.TEXT};
-  margin-bottom: 18px;
+  margin-top: 2%;
+  margin-bottom: 1%;
 `;
 
-
-export const Info = styled.View`
-  flex-direction: row;
-  align-items: center;
-`;
-
-export const Footer = styled.View`
-  width: 100%;
-  justify-content: space-between;
-  flex-direction: row;
-`;
-
-
-export const Label = styled.Text`
-  font-size: 12px;
+export const TextDescription = styled.Text`
+  font-size: 16px;
   font-family: ${({ theme }) => theme.FONTS.TEXT};
-  color: ${({ theme }) => theme.COLORS.SUBTEXT};  
-  margin-left: 3px;
+  color: ${({ theme }) => theme.COLORS.TEXT};
+  margin-bottom: 1%;
+  max-width: 70%;
+  align-items: flex-start;
+`;
+
+export const ButtonContainer = styled.View`
+  width: 50%;
+  align-items: center;
+  flex-direction: row;
+  padding-top: 1%;
+  justify-content: space-between;
+`;
+
+export const ContainerLoader = styled.View`
+  width: 100px;
+  height: 100px;
+  align-items: center;
 `;

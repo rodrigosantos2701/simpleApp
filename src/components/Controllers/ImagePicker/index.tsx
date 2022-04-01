@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Image, View, Platform } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
-import { AddButton } from '../AddButton';
 import { Load } from '../../Animations/Load'
 
 import { TextTitle, Container, Box, ButtonContainer, TextDescription, ContainerLoader } from './styles';
@@ -9,6 +8,7 @@ import { TextTitle, Container, Box, ButtonContainer, TextDescription, ContainerL
 
 import { Button } from '../Button';
 import { RemoveButton } from '../RemoveButton';
+import { AddButton } from '../AddButton';
 
 
 const mock = {

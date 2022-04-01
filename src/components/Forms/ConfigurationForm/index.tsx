@@ -11,7 +11,7 @@ import MaskInput from 'react-native-mask-input';
 
 import { Input } from '@components/Controllers/Input';
 import { InputPhone } from '@components/Controllers/InputPhone';
-import * as ImagePicker from 'expo-image-picker';
+// import * as ImagePicker from 'expo-image-picker';
 import Picker from '../../Controllers/ImagePicker';
 import { EditButton } from '@components/Controllers/EditButton';
 import { SaveButton } from '@components/Controllers/SaveButton';
@@ -56,10 +56,8 @@ export function ConfigurationForm() {
         console.log('empty database');
       }
     }
-    setIsLoading(false)
+   setTimeout(() => {setIsLoading(false)}, 1000)
   }
-
-
 
   async function handleSaveConfigurations() {
     const docRef = doc(firestore, userId, 'config');

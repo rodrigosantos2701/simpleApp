@@ -1,64 +1,53 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useTheme } from 'styled-components/native';
+import { Image, View } from 'react-native';
+import { Load } from '../../Animations/Load'
 
-import {
-  Container,
-  Status,
-  Content,
-  Header,
-  Title,
-  Label,
-  Info,
-  Footer,
-  OrderStyleProps
-} from './styles';
+import { RemoveButton } from '../RemoveButton';
+
+import { Container, Box, TextTitle, ButtonContainer, ContainerLoader, TextDescription } from './styles';
 
 
-export type OrderProps = OrderStyleProps & {
+export type OrderProps =  {
   id: string;
   name: string;
   description: string;
-  price: number;
+  price: string;
+  url: string;
 }
 
 type Props = {
   data: OrderProps;
+  setItemDelete: any;
 };
 
-export function Order({ data }: Props) {
+
+export function Order({ data, setItemDelete }: Props) {
   const theme = useTheme();
+  const [isLoading, setIsLoading] = useState(false);
 
+
+  const DeleteItem = (dataId: string) => {
+    let item = dataId
+    setItemDelete(item)
+  }
+  
   return (
-    <Container>
-      <Status status={data.status} />
-
-      <Content>
-        <Header>
-          <Title>Computador Desktop</Title>
-          <MaterialIcons
-            name={data.status === "open" ? "hourglass-empty" : "check-circle"}
-            size={24}
-            color={data.status === "open" ? theme.COLORS.SECONDARY : theme.COLORS.PRIMARY}
-          />
-        </Header>
-
-        <Footer>
-          <Info>
-            <MaterialIcons name="schedule" size={16} color={theme.COLORS.SUBTEXT} />
-            <Label>
-              20/01/22 às 14h
-            </Label>
-          </Info>
-
-          <Info>
-            <MaterialIcons name="my-location" size={16} color={theme.COLORS.SUBTEXT} />
-            <Label>
-              402345
-            </Label>
-          </Info>
-        </Footer>
-      </Content>
-    </Container>
-  );
+      <Container >
+        {isLoading?<ContainerLoader><Load /></ContainerLoader> 
+        :
+        <Image source={{ uri: data.url }} style={{ width: 100, height: 100 }} /> 
+      }
+        <Box>
+          <TextTitle >{data.name} </TextTitle>
+          <TextDescription >{data.description}</TextDescription>
+          <ButtonContainer>
+            <TextTitle> R$ {data.price}</TextTitle>
+            <RemoveButton enabled={true} onPress={() => DeleteItem(data.id)} />
+          </ButtonContainer>
+        </Box>
+      </Container>
+    );
+    
 }
