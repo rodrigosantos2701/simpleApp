@@ -8,7 +8,7 @@ export const Container = styled.View`
 `;
 
 export const Header = styled.View`
-  width: 100%;
+  width: 95%;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
@@ -22,9 +22,9 @@ export const Title = styled.Text`
 `;
 
 export const Counter = styled.Text`
-  font-size: 14px;
+  font-size: 16px;
   font-family: ${({ theme }) => theme.FONTS.TEXT};
-  color: ${({ theme }) => theme.COLORS.SUBTEXT};
+  color: ${({ theme }) => theme.COLORS.BLACK};
   margin-bottom: 12px;
 `;
 

@@ -62,7 +62,7 @@ export function Orders() {
 
       <Header>
         <Title> {status}</Title>
-        {status === 'Itens' ? <Counter>{orders.length}</Counter> : <Counter />}
+        {status === 'Itens' ? <Counter>Total: {orders.length}</Counter> : <Counter />}
       </Header>
 
       {status === 'Configuração'
