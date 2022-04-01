@@ -1,14 +1,21 @@
 import React, { useEffect, useState } from 'react';
-import { collection, addDoc } from "firebase/firestore";
+import { collection, addDoc, setDoc, doc, getDoc } from "firebase/firestore";
 import { firestore } from '../../../services/firebase';
 import { getAuth } from "firebase/auth";
+import { getStorage, ref, getDownloadURL, uploadBytes } from "firebase/storage";
+import 'react-native-get-random-values';
+import { v4 as uuidv4 } from 'uuid';
 
+import { Picker, PickerProps } from '../../Controllers/ImagePicker';
 
 import { Form, Title } from './styles';
 import { Input } from '@components/Controllers/Input';
 import { Button } from '@components/Controllers/Button';
 import { TextArea } from '@components/Controllers/TextArea';
-import { Alert } from 'react-native';
+import { Alert, View } from 'react-native';
+
+
+
 
 export function OrderForm() {
   const [name, setName] = useState('');
@@ -16,51 +23,76 @@ export function OrderForm() {
   const [price, setPrice] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [userId, setUserId] = useState('')
+  const [img, setImg] = useState<any>();
+  const [url, setUrl] = useState('');
+
 
   const auth = getAuth();
   const user = auth.currentUser;
+  const id = uuidv4()
+
 
   useEffect(() => {
-    handleGetUserUID()
+    handleGetItems()
   }, [user])
 
-  async function handleGetUserUID() {
+
+  async function handleGetItems() {
     if (user) {
+      const docRef = doc(firestore, user.uid, id);
+      const docSnap = await getDoc(docRef);
+
       setUserId(user.uid)
-    }
+
+      } else {
+        console.log('error');
+      }
   }
 
-
-  async function handleNewOrder() {
+  async function handleSaveItems() {
     setIsLoading(true)
-    try {
-      const docRef = await addDoc(collection(firestore, userId,), {
-        name,
-        description,
-        price
-      });
-    } catch (e) {
-      console.error("Error adding document: ", e);
-    } finally {
-      Alert.alert(("Salvo com sucesso!"))
-      setIsLoading(false)
-      setName('')
-      setDescription('')
-      setPrice('')
-  
-    }
+    const docRef = doc(firestore, userId, id);
+    const companyRef = collection(firestore, userId);
+    const storage = getStorage();
+    const storageRef = ref(storage, userId + `/${id}`);
+
+
+    //Convert img 
+    const newImg = await fetch(img)
+    const bytes = await newImg.blob()
+    await uploadBytes(storageRef, bytes)
+
+    // //getURL
+    const url = await getDownloadURL(ref(storage, userId + `/${id}`))
+
+    setUrl(url)
+
+    await setDoc(doc(companyRef, id), {
+      name,
+      description,
+      price,
+      url
+
+    })
+    Alert.alert(("Salvo com sucesso!"))
+    setName('')
+    setDescription('')
+    setPrice('')
+    setUrl('')
+    setImg('')
+    setIsLoading(false)
+
   }
+
 
   return (
     <Form>
       <Title>Novo Produto/Serviço</Title>
-      <Input placeholder="Nome" onChangeText={setName} value={name}/>
+      <Input placeholder="Nome" onChangeText={setName} value={name} />
       <Input placeholder="Descrição" onChangeText={setDescription} value={description} />
-      <Input placeholder="Preço" onChangeText={setPrice} value={price}/>
-      <Input placeholder="Imagem" />
-
-
-      <Button title="Salvar" isLoading={isLoading} onPress={handleNewOrder} />
+      <Input placeholder="Preço" onChangeText={setPrice} value={price} />
+      <Picker editable={true} setLogo={setImg} logo={img} url={url} isLoading={false} pickerText={'Add Image'} />
+      <Button title="Salvar" isLoading={isLoading} onPress={handleSaveItems} style={{ marginTop: 10, marginBottom: 10 }} />
     </Form>
   );
 }

@@ -11,8 +11,7 @@ import MaskInput from 'react-native-mask-input';
 
 import { Input } from '@components/Controllers/Input';
 import { InputPhone } from '@components/Controllers/InputPhone';
-// import * as ImagePicker from 'expo-image-picker';
-import Picker from '../../Controllers/ImagePicker';
+import {Picker} from '../../Controllers/ImagePicker';
 import { EditButton } from '@components/Controllers/EditButton';
 import { SaveButton } from '@components/Controllers/SaveButton';
 import { Button } from '@components/Controllers/Button';
@@ -110,7 +109,7 @@ export function ConfigurationForm() {
             value={whats}
           />
           <View>
-            <Picker editable={editable} setLogo={setLogo} logo={logo} url={url} isLoading={isLoading} />
+            <Picker editable={editable} setLogo={setLogo} logo={logo} url={url} isLoading={isLoading} pickerText={'Add Logo'} />
           </View>
         </Form>
       </Container>

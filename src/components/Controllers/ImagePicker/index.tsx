@@ -10,13 +10,17 @@ import { Button } from '../Button';
 import { RemoveButton } from '../RemoveButton';
 import { AddButton } from '../AddButton';
 
-
-const mock = {
-  title: 'Add Logo ',
-  description: 'Descricão pequena do produto.'
+export type PickerProps =  {
+  editable: boolean;
+  setLogo: any;
+  logo: any;
+  url: string;
+  isLoading: boolean;
+  pickerText: string;
 }
 
-export default function Picker({ editable, setLogo, logo, url, isLoading }: any) {
+
+export function Picker({ editable, setLogo, logo, url, isLoading, pickerText }: PickerProps) {
 
  
   const pickImage = async () => {
@@ -45,7 +49,7 @@ export default function Picker({ editable, setLogo, logo, url, isLoading }: any)
       : <TextTitle></TextTitle>
     }
       <Box>
-        <TextTitle >{mock.title}</TextTitle>
+        <TextTitle >{pickerText}</TextTitle>
         <ButtonContainer>
           <AddButton enabled={editable} onPress={pickImage} />
           <RemoveButton enabled={editable} onPress={() => setLogo(null)} />

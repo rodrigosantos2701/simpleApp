@@ -31,7 +31,31 @@ const mock =
     description: 'Descricão do produto',
     price: '100,50',
     url: 'https://firebasestorage.googleapis.com/v0/b/myhelpdeskproject-476b6.appspot.com/o/erSLjHnIvmSCtIhcTAnAeqRMdg53%2Flogo.jpg?alt=media&token=8699404e-1710-4f33-8a92-b666b3cc6983'
+  },
+  {
+    id: '4',
+    name: 'Produto 4',
+    description: 'Descricão do produto',
+    price: '100,50',
+    url: 'https://firebasestorage.googleapis.com/v0/b/myhelpdeskproject-476b6.appspot.com/o/erSLjHnIvmSCtIhcTAnAeqRMdg53%2Flogo.jpg?alt=media&token=8699404e-1710-4f33-8a92-b666b3cc6983'
+  },
+  {
+    id: '5',
+    name: 'Produto 5',
+    description: 'Descricão do produto',
+    price: '100,50',
+    url: 'https://firebasestorage.googleapis.com/v0/b/myhelpdeskproject-476b6.appspot.com/o/erSLjHnIvmSCtIhcTAnAeqRMdg53%2Flogo.jpg?alt=media&token=8699404e-1710-4f33-8a92-b666b3cc6983'
+  },
+  {
+    id: '6',
+    name: 'Produto 6',
+    description: 'Descricão do produto',
+    price: '100,50',
+    url: 'https://firebasestorage.googleapis.com/v0/b/myhelpdeskproject-476b6.appspot.com/o/erSLjHnIvmSCtIhcTAnAeqRMdg53%2Flogo.jpg?alt=media&token=8699404e-1710-4f33-8a92-b666b3cc6983'
   }
+
+
+
 ]
 
 export function Orders() {
