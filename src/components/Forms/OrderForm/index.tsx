@@ -39,6 +39,12 @@ export function OrderForm() {
   }, [user])
 
 
+  const formValidation = () => {
+    if (name !== '' && description !== '' && price !== '' && img !== '') {
+      return true
+    }
+  }
+
   async function handleGetItems() {
     if (user) {
       const docRef = doc(firestore, user.uid, id);
@@ -46,47 +52,54 @@ export function OrderForm() {
 
       setUserId(user.uid)
 
-      } else {
-        console.log('error');
-      }
+    } else {
+      console.log('error');
+    }
   }
 
   async function handleSaveItems() {
     setIsLoading(true)
-    // const docRef = doc(firestore, userId, id);
-    const firestoreRef = collection(firestore, userId);
-    const storageRef = ref(storage, userId + `/${id}`);
+    let isValid = formValidation()
+
+    if (!isValid) {
+      alert('Preencher todos os campos e selecionar uma imagem ')
+      setIsLoading(false)
+
+    } else {
+
+      // const docRef = doc(firestore, userId, id);
+      const firestoreRef = collection(firestore, userId);
+      const storageRef = ref(storage, userId + `/${id}`);
 
 
-    //Convert img 
-    const newImg = await fetch(img)
-    const bytes = await newImg.blob()
-    await uploadBytes(storageRef, bytes)
+      //Convert img 
+      const newImg = await fetch(img)
+      const bytes = await newImg.blob()
+      await uploadBytes(storageRef, bytes)
 
-    // //getURL
-    const url = await getDownloadURL(ref(storage, userId + `/${id}`))
+      // //getURL
+      const url = await getDownloadURL(ref(storage, userId + `/${id}`))
 
-    setUrl(url)
-    // setStorageId(id)
+      setUrl(url)
+      // setStorageId(id)
 
-    await setDoc(doc(firestoreRef, id), {
-      id,
-      name,
-      description,
-      price,
-      url
+      await setDoc(doc(firestoreRef, id), {
+        id,
+        name,
+        description,
+        price,
+        url
 
-    })
-    Alert.alert(("Salvo com sucesso!"))
-    setName('')
-    setDescription('')
-    setPrice('')
-    setUrl('')
-    setImg('')
-    setIsLoading(false)
-
+      })
+      Alert.alert(("Salvo com sucesso!"))
+      setName('')
+      setDescription('')
+      setPrice('')
+      setUrl('')
+      setImg('')
+      setIsLoading(false)
+    }
   }
-
 
   return (
     <Form>
@@ -95,6 +108,9 @@ export function OrderForm() {
       <Input placeholder="Descrição" onChangeText={setDescription} value={description} />
       <Input placeholder="Preço" onChangeText={setPrice} value={price} />
       <Picker editable={true} setLogo={setImg} logo={img} url={url} isLoading={false} pickerText={'Add Image'} />
+
+      {/* <Button title="Salvar" isLoading={isLoading} onPress={() => alert('Preencher todos os campos e selecionar imagem ')} style={{ marginTop: 10, marginBottom: 10 }} /> */}
+
       <Button title="Salvar" isLoading={isLoading} onPress={handleSaveItems} style={{ marginTop: 10, marginBottom: 10 }} />
     </Form>
   );

@@ -15,7 +15,7 @@ import { QrCode } from '@components/Forms/QrCodeForm';
 
 export function Orders() {
   const [status, setStatus] = useState('Itens');
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [orders, setOrders] = useState<OrderProps[]>([]);
   const [itemDelete, setItemDelete] = useState('');
   const [userId, setUserId] = useState('')
@@ -45,6 +45,7 @@ export function Orders() {
   };
 
    const handleGetItems = async () => {
+     setIsLoading(true)
     let a: OrderProps[] = []
     if (user) {
       const q = query(collection(firestore, user.uid), where("id", "!=", '' ));
@@ -64,7 +65,7 @@ export function Orders() {
       setUserId(user.uid)
     }
 
-    // setTimeout(() => {setIsLoading(false)}, 1000)
+    setTimeout(() => {setIsLoading(false)}, 1000)
     
   }
 
@@ -74,7 +75,7 @@ export function Orders() {
 
       <Header>
       {status === 'Itens' ? <Title >{status} ({orders.length})</Title> : <Title >{status}</Title>}
-      {status === 'Itens' ? <MaterialIcons name='refresh' size={26} onPress={handleGetItems}></MaterialIcons> : <Counter />}
+     <MaterialIcons name='refresh' size={26} onPress={handleGetItems}></MaterialIcons>
       </Header>
         
 
