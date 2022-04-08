@@ -4,7 +4,7 @@ import { useTheme } from 'styled-components/native';
 import { Image, View } from 'react-native';
 import { Load } from '../../Animations/Load'
 import { getAuth } from "firebase/auth";
-import { getStorage, ref, getDownloadURL, uploadBytes, deleteObject } from "firebase/storage";
+import { getStorage, ref, deleteObject } from "firebase/storage";
 
 
 
@@ -27,8 +27,6 @@ type Props = {
   setItemDelete: any;
 };
 
-const auth = getAuth();
-const user = auth.currentUser;
 
 export function Order({ data, userId, setItemDelete }: Props) {
   const theme = useTheme();
@@ -36,13 +34,11 @@ export function Order({ data, userId, setItemDelete }: Props) {
 
 
   const DeleteItem = async (dataId: string) => {
-
     let item = dataId
     setItemDelete(item)
     const storage = getStorage();
     const storageRef = ref(storage, userId +'/'+ item);
     await deleteObject(storageRef)
-
   }
   
   return (

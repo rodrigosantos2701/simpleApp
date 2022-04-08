@@ -4,6 +4,10 @@ import { collection, addDoc, setDoc, doc, getDoc, query, where, getDocs, deleteD
 import { firestore } from '../../../services/firebase';
 import { getAuth } from "firebase/auth";
 import { getStorage, ref, getDownloadURL, uploadBytes, deleteObject } from "firebase/storage";
+import { MaterialIcons } from '@expo/vector-icons';
+import { useTheme } from 'styled-components/native';
+
+
 
 
 import { Load } from '@components/Animations/Load';
@@ -12,6 +16,7 @@ import { Order, OrderProps } from '@components/Controllers/Order';
 import { Container, Header, Title, Counter } from './styles';
 import { ConfigurationForm } from '@components/Forms/ConfigurationForm';
 import { QrCode } from '@components/Forms/QrCodeForm';
+
 
 
 
@@ -27,21 +32,19 @@ export function Orders() {
   const [price, setPrice] = useState('');
   const [url, setUrl] = useState('');
 
-
-
   const auth = getAuth();
   const user = auth.currentUser;
-
 
   useEffect(() => {
     handleGetItems()
   }, []);
 
+
   useEffect(() => {
-    Remove()
+    RemoveItemFromFirebase()
   },[itemDelete])
 
-  const Remove = async () => {
+  const RemoveItemFromFirebase = async () => {
     await deleteDoc(doc(firestore, userId, itemDelete ))
     setOrders(orders => {
       return orders.filter(item => item.id !== itemDelete);
@@ -63,12 +66,14 @@ export function Orders() {
           "url":  newDoc.url,
         }
         a.push(addDoc)
-        setOrders(a)
+        setOrders([...a])
       });
       setUserId(user.uid)
-      
     }
-    setTimeout(() => {setIsLoading(false)}, 1000)
+    setOrders(orders => {
+      return orders.filter(item => item);
+    });
+    // setTimeout(() => {setIsLoading(false)}, 1000)
     
   }
 
@@ -77,9 +82,10 @@ export function Orders() {
       <Filters onFilter={setStatus} />
 
       <Header>
-        <Title> {status}</Title>
-        {status === 'Itens' ? <Counter>Total: {orders.length}</Counter> : <Counter />}
+        <Title> {status} ({orders.length})</Title>
+        {status === 'Itens' ? <MaterialIcons name='refresh' size={26} onPress={handleGetItems}></MaterialIcons> : <Counter />}
       </Header>
+        
 
       {status === 'Configuração'
         ? <ConfigurationForm />
@@ -90,7 +96,7 @@ export function Orders() {
             : <FlatList
               data={orders}
               keyExtractor={item => item.id}
-              renderItem={({ item }) => <Order data={item} setItemDelete={setItemDelete} userId={userId} />}
+              renderItem={({ item }) => <Order data={item} setItemDelete={setItemDelete} userId={userId}  />}
               contentContainerStyle={{ paddingBottom: 100 }}
               showsVerticalScrollIndicator={false}
               style={{ flex: 1 }}
