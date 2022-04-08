@@ -75,7 +75,7 @@ export function Orders() {
 
       <Header>
       {status === 'Itens' ? <Title >{status} ({orders.length})</Title> : <Title >{status}</Title>}
-     <MaterialIcons name='refresh' size={26} onPress={handleGetItems}></MaterialIcons>
+      {status === 'Itens' ? <MaterialIcons name='refresh' size={26} onPress={handleGetItems}></MaterialIcons>: <Counter/>}
       </Header>
         
 

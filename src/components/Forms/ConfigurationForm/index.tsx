@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-import { collection, addDoc, setDoc, doc, getDoc } from "firebase/firestore";
+import { collection, addDoc, setDoc, doc, getDoc, deleteDoc, updateDoc } from "firebase/firestore";
 import { firestore } from '../../../services/firebase';
 import { getAuth } from "firebase/auth";
 import { getStorage, ref, getDownloadURL, uploadBytes } from "firebase/storage";
@@ -11,7 +11,7 @@ import MaskInput from 'react-native-mask-input';
 
 import { Input } from '@components/Controllers/Input';
 import { InputPhone } from '@components/Controllers/InputPhone';
-import {Picker} from '../../Controllers/ImagePicker';
+import { Picker } from '../../Controllers/ImagePicker';
 import { EditButton } from '@components/Controllers/EditButton';
 import { SaveButton } from '@components/Controllers/SaveButton';
 import { Button } from '@components/Controllers/Button';
@@ -26,6 +26,7 @@ export function ConfigurationForm() {
   const [logo, setLogo] = useState<any>();
   const [url, setUrl] = useState('');
   const [isLoading, setIsLoading] = useState(true);
+  const [ifExists, setIfExists] = useState(false)
 
 
   const auth = getAuth();
@@ -50,40 +51,58 @@ export function ConfigurationForm() {
         setDescription(configData.description)
         setWhats(configData.whats)
         setUrl(configData.url)
-        
+        setIfExists(true)
+
       } else {
         console.log('empty database');
       }
     }
-   setTimeout(() => {setIsLoading(false)}, 1000)
+    setTimeout(() => { setIsLoading(false) }, 1000)
   }
 
   async function handleSaveConfigurations() {
-    const docRef = doc(firestore, userId, 'config');
-    const companyRef = collection(firestore, userId);
-    const storage = getStorage();
-    const storageRef = ref(storage, userId + '/logo.jpg');
 
-    //Convert img 
-    const img = await fetch(logo)
-    const bytes = await img.blob()
-    await uploadBytes(storageRef, bytes)
+    if (ifExists) {
+      const upDateRef = doc(firestore, userId, "config");
 
-    // //getURL
-    const url = await getDownloadURL(ref(storage, userId + '/logo.jpg'))
-    
-    setUrl(url)
-    setLogo(null)
+      await updateDoc(upDateRef, {
+        company,
+        description,
+        whats,
+        url
+      });
+      setEditable(false)
+      alert('exists')
+    } else {
+      // const docRef = doc(firestore, userId, 'config');
+      const companyRef = collection(firestore, userId);
 
-    await setDoc(doc(companyRef, 'config'), {
-      company,
-      description,
-      whats,
-      url
+      const storage = getStorage();
+      const storageRef = ref(storage, userId + '/logo.jpg');
 
-    })
-    Alert.alert(("Salvo com sucesso!"))
-    setEditable(false)
+      //Convert img 
+      const img = await fetch(logo)
+      const bytes = await img.blob()
+      await uploadBytes(storageRef, bytes)
+
+      // //getURL
+      const url = await getDownloadURL(ref(storage, userId + '/logo.jpg'))
+
+      setUrl(url)
+      setLogo(null)
+
+      await setDoc(doc(companyRef, 'config'), {
+        company,
+        description,
+        whats,
+        url
+
+      })
+      Alert.alert(("Salvo com sucesso!"))
+      setEditable(false)
+
+
+    }
 
   }
 
@@ -93,8 +112,8 @@ export function ConfigurationForm() {
         <ButtonContainer>
           <TextInfo>{editable ? 'Salvar' : 'Editar'}</TextInfo>
           {editable
-            ? 
-             <SaveButton onPress={handleSaveConfigurations} />
+            ?
+            <SaveButton onPress={handleSaveConfigurations} />
             : <EditButton onPress={() => setEditable(!editable)} />
           }
         </ButtonContainer>

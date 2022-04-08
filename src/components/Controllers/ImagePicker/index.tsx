@@ -52,7 +52,7 @@ export function Picker({ editable, setLogo, logo, url, isLoading, pickerText }: 
         <TextTitle >{pickerText}</TextTitle>
         <ButtonContainer>
           <AddButton enabled={editable} onPress={pickImage} />
-          <RemoveButton enabled={editable} onPress={() => setLogo(null)} />
+          {/* <RemoveButton enabled={editable} onPress={() => setLogo(null)} /> */}
         </ButtonContainer>
       </Box>
     </Container>
