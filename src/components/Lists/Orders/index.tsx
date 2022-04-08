@@ -3,12 +3,7 @@ import { FlatList } from 'react-native';
 import { collection, addDoc, setDoc, doc, getDoc, query, where, getDocs, deleteDoc } from "firebase/firestore";
 import { firestore } from '../../../services/firebase';
 import { getAuth } from "firebase/auth";
-import { getStorage, ref, getDownloadURL, uploadBytes, deleteObject } from "firebase/storage";
 import { MaterialIcons } from '@expo/vector-icons';
-import { useTheme } from 'styled-components/native';
-
-
-
 
 import { Load } from '@components/Animations/Load';
 import { Filters } from '@components/Controllers/Filters';
@@ -16,8 +11,6 @@ import { Order, OrderProps } from '@components/Controllers/Order';
 import { Container, Header, Title, Counter } from './styles';
 import { ConfigurationForm } from '@components/Forms/ConfigurationForm';
 import { QrCode } from '@components/Forms/QrCodeForm';
-
-
 
 
 export function Orders() {
@@ -70,9 +63,7 @@ export function Orders() {
       });
       setUserId(user.uid)
     }
-    setOrders(orders => {
-      return orders.filter(item => item);
-    });
+
     // setTimeout(() => {setIsLoading(false)}, 1000)
     
   }
@@ -82,8 +73,8 @@ export function Orders() {
       <Filters onFilter={setStatus} />
 
       <Header>
-        <Title> {status} ({orders.length})</Title>
-        {status === 'Itens' ? <MaterialIcons name='refresh' size={26} onPress={handleGetItems}></MaterialIcons> : <Counter />}
+      {status === 'Itens' ? <Title >{status} ({orders.length})</Title> : <Title >{status}</Title>}
+      {status === 'Itens' ? <MaterialIcons name='refresh' size={26} onPress={handleGetItems}></MaterialIcons> : <Counter />}
       </Header>
         
 
