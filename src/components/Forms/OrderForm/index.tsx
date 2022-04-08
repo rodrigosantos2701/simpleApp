@@ -40,7 +40,7 @@ export function OrderForm() {
 
 
   const formValidation = () => {
-    if (name !== '' && description !== '' && price !== '' && img !== '') {
+    if (name !== '' && description !== '' && price !== ''  && img !== undefined) {
       return true
     }
   }
@@ -108,9 +108,6 @@ export function OrderForm() {
       <Input placeholder="Descrição" onChangeText={setDescription} value={description} />
       <Input placeholder="Preço" onChangeText={setPrice} value={price} />
       <Picker editable={true} setLogo={setImg} logo={img} url={url} isLoading={false} pickerText={'Add Image'} />
-
-      {/* <Button title="Salvar" isLoading={isLoading} onPress={() => alert('Preencher todos os campos e selecionar imagem ')} style={{ marginTop: 10, marginBottom: 10 }} /> */}
-
       <Button title="Salvar" isLoading={isLoading} onPress={handleSaveItems} style={{ marginTop: 10, marginBottom: 10 }} />
     </Form>
   );
