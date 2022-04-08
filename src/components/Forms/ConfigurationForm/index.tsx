@@ -72,7 +72,7 @@ export function ConfigurationForm() {
         url
       });
       setEditable(false)
-      alert('exists')
+      alert('Atualizado com sucesso!')
     } else {
       // const docRef = doc(firestore, userId, 'config');
       const companyRef = collection(firestore, userId);
