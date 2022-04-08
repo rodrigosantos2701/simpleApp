@@ -25,9 +25,11 @@ export function OrderForm() {
   const [userId, setUserId] = useState('')
   const [img, setImg] = useState<any>();
   const [url, setUrl] = useState('');
+  const [storageId, setStorageId] = useState('')
 
 
   const auth = getAuth();
+  const storage = getStorage();
   const user = auth.currentUser;
   const id = uuidv4()
 
@@ -51,9 +53,8 @@ export function OrderForm() {
 
   async function handleSaveItems() {
     setIsLoading(true)
-    const docRef = doc(firestore, userId, id);
-    const companyRef = collection(firestore, userId);
-    const storage = getStorage();
+    // const docRef = doc(firestore, userId, id);
+    const firestoreRef = collection(firestore, userId);
     const storageRef = ref(storage, userId + `/${id}`);
 
 
@@ -66,8 +67,10 @@ export function OrderForm() {
     const url = await getDownloadURL(ref(storage, userId + `/${id}`))
 
     setUrl(url)
+    // setStorageId(id)
 
-    await setDoc(doc(companyRef, id), {
+    await setDoc(doc(firestoreRef, id), {
+      id,
       name,
       description,
       price,

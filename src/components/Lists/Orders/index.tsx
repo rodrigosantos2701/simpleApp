@@ -1,5 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { FlatList } from 'react-native';
+import { collection, addDoc, setDoc, doc, getDoc, query, where, getDocs, deleteDoc } from "firebase/firestore";
+import { firestore } from '../../../services/firebase';
+import { getAuth } from "firebase/auth";
+import { getStorage, ref, getDownloadURL, uploadBytes, deleteObject } from "firebase/storage";
+
 
 import { Load } from '@components/Animations/Load';
 import { Filters } from '@components/Controllers/Filters';
@@ -9,76 +14,63 @@ import { ConfigurationForm } from '@components/Forms/ConfigurationForm';
 import { QrCode } from '@components/Forms/QrCodeForm';
 
 
-const mock = 
-[
-  {
-    id: '1',
-    name: 'Produto 123456',
-    description: 'Descricão do produto 1234',
-    price: '100,50',
-    url: 'https://firebasestorage.googleapis.com/v0/b/myhelpdeskproject-476b6.appspot.com/o/erSLjHnIvmSCtIhcTAnAeqRMdg53%2Flogo.jpg?alt=media&token=8699404e-1710-4f33-8a92-b666b3cc6983'
-  },
-  {
-    id: '2',
-    name: 'Produto 2',
-    description: 'Descricão do produto',
-    price: '100,50',
-    url: 'https://firebasestorage.googleapis.com/v0/b/myhelpdeskproject-476b6.appspot.com/o/erSLjHnIvmSCtIhcTAnAeqRMdg53%2Flogo.jpg?alt=media&token=8699404e-1710-4f33-8a92-b666b3cc6983'
-  },
-  {
-    id: '3',
-    name: 'Produto 3',
-    description: 'Descricão do produto',
-    price: '100,50',
-    url: 'https://firebasestorage.googleapis.com/v0/b/myhelpdeskproject-476b6.appspot.com/o/erSLjHnIvmSCtIhcTAnAeqRMdg53%2Flogo.jpg?alt=media&token=8699404e-1710-4f33-8a92-b666b3cc6983'
-  },
-  {
-    id: '4',
-    name: 'Produto 4',
-    description: 'Descricão do produto',
-    price: '100,50',
-    url: 'https://firebasestorage.googleapis.com/v0/b/myhelpdeskproject-476b6.appspot.com/o/erSLjHnIvmSCtIhcTAnAeqRMdg53%2Flogo.jpg?alt=media&token=8699404e-1710-4f33-8a92-b666b3cc6983'
-  },
-  {
-    id: '5',
-    name: 'Produto 5',
-    description: 'Descricão do produto',
-    price: '100,50',
-    url: 'https://firebasestorage.googleapis.com/v0/b/myhelpdeskproject-476b6.appspot.com/o/erSLjHnIvmSCtIhcTAnAeqRMdg53%2Flogo.jpg?alt=media&token=8699404e-1710-4f33-8a92-b666b3cc6983'
-  },
-  {
-    id: '6',
-    name: 'Produto 6',
-    description: 'Descricão do produto',
-    price: '100,50',
-    url: 'https://firebasestorage.googleapis.com/v0/b/myhelpdeskproject-476b6.appspot.com/o/erSLjHnIvmSCtIhcTAnAeqRMdg53%2Flogo.jpg?alt=media&token=8699404e-1710-4f33-8a92-b666b3cc6983'
-  }
-
-
-
-]
 
 export function Orders() {
   const [status, setStatus] = useState('Itens');
   const [isLoading, setIsLoading] = useState(false);
   const [orders, setOrders] = useState<OrderProps[]>([]);
   const [itemDelete, setItemDelete] = useState('');
+  const [userId, setUserId] = useState('')
+  const [name, setName] = useState('');
+  const [description, setDescription] = useState('');
+  const [id, setId] = useState('');
+  const [price, setPrice] = useState('');
+  const [url, setUrl] = useState('');
 
+
+
+  const auth = getAuth();
+  const user = auth.currentUser;
 
 
   useEffect(() => {
-    setOrders(mock);
+    handleGetItems()
   }, []);
 
   useEffect(() => {
     Remove()
   },[itemDelete])
 
-  const Remove = () => {
+  const Remove = async () => {
+    await deleteDoc(doc(firestore, userId, itemDelete ))
     setOrders(orders => {
       return orders.filter(item => item.id !== itemDelete);
     });
   };
+
+   const handleGetItems = async () => {
+    let a: OrderProps[] = []
+    if (user) {
+      const q = query(collection(firestore, user.uid), where("id", "!=", '' ));
+      const querySnapshot = await getDocs(q);
+      querySnapshot.docs.map((doc) => {
+        let newDoc = doc.data()
+        let addDoc: OrderProps = {
+          "description": newDoc.description,
+          "id":  newDoc.id,
+          "name":  newDoc.name,
+          "price": newDoc.price,
+          "url":  newDoc.url,
+        }
+        a.push(addDoc)
+        setOrders(a)
+      });
+      setUserId(user.uid)
+      
+    }
+    setTimeout(() => {setIsLoading(false)}, 1000)
+    
+  }
 
   return (
     <Container>
@@ -98,7 +90,7 @@ export function Orders() {
             : <FlatList
               data={orders}
               keyExtractor={item => item.id}
-              renderItem={({ item }) => <Order data={item} setItemDelete={setItemDelete} />}
+              renderItem={({ item }) => <Order data={item} setItemDelete={setItemDelete} userId={userId} />}
               contentContainerStyle={{ paddingBottom: 100 }}
               showsVerticalScrollIndicator={false}
               style={{ flex: 1 }}

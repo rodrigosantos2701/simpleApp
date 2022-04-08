@@ -3,6 +3,10 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { useTheme } from 'styled-components/native';
 import { Image, View } from 'react-native';
 import { Load } from '../../Animations/Load'
+import { getAuth } from "firebase/auth";
+import { getStorage, ref, getDownloadURL, uploadBytes, deleteObject } from "firebase/storage";
+
+
 
 import { RemoveButton } from '../RemoveButton';
 
@@ -19,18 +23,26 @@ export type OrderProps =  {
 
 type Props = {
   data: OrderProps;
+  userId: any;
   setItemDelete: any;
 };
 
+const auth = getAuth();
+const user = auth.currentUser;
 
-export function Order({ data, setItemDelete }: Props) {
+export function Order({ data, userId, setItemDelete }: Props) {
   const theme = useTheme();
   const [isLoading, setIsLoading] = useState(false);
 
 
-  const DeleteItem = (dataId: string) => {
+  const DeleteItem = async (dataId: string) => {
+
     let item = dataId
     setItemDelete(item)
+    const storage = getStorage();
+    const storageRef = ref(storage, userId +'/'+ item);
+    await deleteObject(storageRef)
+
   }
   
   return (
