@@ -82,7 +82,7 @@ export function Orders() {
       {status === 'Configuração'
         ? <ConfigurationForm />
         : status === 'Link e QrCode'
-          ? <QrCode />
+          ? <QrCode userId={userId} />
           : isLoading
             ? <Load />
             : <FlatList

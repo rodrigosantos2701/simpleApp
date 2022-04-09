@@ -1,30 +1,48 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import firestore from '@react-native-firebase/firestore'
+import * as Clipboard from 'expo-clipboard';
+import QRCode from 'react-native-qrcode-svg';
 
-import { Form, TextInfo, Container, ButtonContainer } from './styles';
+import { QRCodeContainer, TextInfo, Container, ButtonContainer } from './styles';
 import { Input } from '@components/Controllers/Input';
-import { Button } from '@components/Controllers/Button';
-import { TextArea } from '@components/Controllers/TextArea';
-import { EditButton } from '@components/Controllers/EditButton';
-import { SaveButton } from '@components/Controllers/SaveButton';
+import { AddToClipBoardButton } from '@components/Controllers/AddToClipboardButton'
+import { View } from 'react-native';
 
 
-export function QrCode() {
+type props = {
+  userId: string
+}
+
+export function QrCode({ userId }: props) {
   const [link, setLink] = useState('');
   const [qrcode, setQrcode] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+  const [copiedText, setCopiedText] = useState('textLink/' + userId);
 
-  function handleSave() {
-    setIsLoading(true);
-  }
+
+
+  const copyToClipboard = () => {
+    Clipboard.setString(copiedText);
+    alert('Copiado com sucesso!')
+  };
+
+  const fetchCopiedText = async () => {
+    const text = await Clipboard.getStringAsync();
+    setCopiedText(text);
+  };
+
 
   return (
+    <>
     <Container>
-      <Form>
-        <Input editable={false} placeholder="Link"  />
-        <Input editable={false} placeholder="QR Code"  />
-
-      </Form>
+      <ButtonContainer>
+        <TextInfo>Copiar Link</TextInfo>
+        <AddToClipBoardButton enabled={true} onPress={copyToClipboard} />
+      </ButtonContainer>
+      <Input editable={false} placeholder={copiedText} />
     </Container>
+      <QRCodeContainer>
+        <QRCode value={copiedText} size={150}/>
+      </QRCodeContainer>
+    </>
   );
 }

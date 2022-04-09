@@ -1,7 +1,11 @@
 import styled from 'styled-components/native';
 
-export const Form = styled.View`
+export const QRCodeContainer = styled.View`
   width: 100%;
+  margin-top: 10%;
+  align-items: center;
+
+
 `;
 
 export const TextInfo = styled.Text`
@@ -20,7 +24,7 @@ export const Container = styled.View`
 
 export const ButtonContainer = styled.View`
   margin-bottom: 15px;
-  width: 25%;
+  width: 40%;
   flex-direction: row;
   justify-content: space-between;
 `;
