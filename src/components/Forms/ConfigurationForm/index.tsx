@@ -6,7 +6,7 @@ import { getAuth } from "firebase/auth";
 import { getStorage, ref, getDownloadURL, uploadBytes } from "firebase/storage";
 
 import { Form, TextInfo, Container, ButtonContainer } from './styles';
-import { Alert, View, Image } from 'react-native';
+import { Alert, View, Image, ScrollView } from 'react-native';
 import MaskInput from 'react-native-mask-input';
 
 import { Input } from '@components/Controllers/Input';
@@ -109,8 +109,8 @@ export function ConfigurationForm() {
   }
 
   return (
-    <View>
-      <Container>
+    <ScrollView showsVerticalScrollIndicator={false}> 
+      <Container >
         <ButtonContainer>
           <TextInfo>{editable ? 'Salvar' : 'Editar'}</TextInfo>
           {editable
@@ -137,6 +137,6 @@ export function ConfigurationForm() {
           }
         </Form>
       </Container>
-    </View>
+    </ScrollView>
   );
 }
