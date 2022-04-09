@@ -15,6 +15,8 @@ import { Picker } from '../../Controllers/ImagePicker';
 import { EditButton } from '@components/Controllers/EditButton';
 import { SaveButton } from '@components/Controllers/SaveButton';
 import { Button } from '@components/Controllers/Button';
+import { Load } from '../../Animations/Load'
+
 
 
 export function ConfigurationForm() {
@@ -118,18 +120,16 @@ export function ConfigurationForm() {
           }
         </ButtonContainer>
         <Form>
-          <Input editable={editable} placeholder="Empresa" onChangeText={setCompany} value={company} />
-          <Input editable={editable} placeholder="Descrição" onChangeText={setDescription} value={description} />
-          <InputPhone
-            editable={editable}
-            placeholder="WhatsApp"
-            onChangeText={(masked: any, unmasked: any) => { setWhats(masked); }}
-            mask={['(', /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/]}
-            value={whats}
-          />
-          <View>
-            <Picker editable={editable} setLogo={setLogo} logo={logo} url={url} isLoading={isLoading} pickerText={'Add Logo'} />
-          </View>
+          {isLoading ? <Load /> :
+            <><Input editable={editable} placeholder="Empresa" onChangeText={setCompany} value={company} /><Input editable={editable} placeholder="Descrição" onChangeText={setDescription} value={description} /><InputPhone
+              editable={editable}
+              placeholder="WhatsApp"
+              onChangeText={(masked: any, unmasked: any) => { setWhats(masked); }}
+              mask={['(', /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/]}
+              value={whats} /><View>
+                <Picker editable={editable} setLogo={setLogo} logo={logo} url={url} isLoading={isLoading} pickerText={'Add Logo'} />
+              </View></>
+          }
         </Form>
       </Container>
     </View>
