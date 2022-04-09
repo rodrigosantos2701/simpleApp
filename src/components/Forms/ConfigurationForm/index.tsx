@@ -121,14 +121,19 @@ export function ConfigurationForm() {
         </ButtonContainer>
         <Form>
           {isLoading ? <Load /> :
-            <><Input editable={editable} placeholder="Empresa" onChangeText={setCompany} value={company} /><Input editable={editable} placeholder="Descrição" onChangeText={setDescription} value={description} /><InputPhone
+            <>
+            <Input editable={editable} placeholder="Empresa" onChangeText={setCompany} value={company} />
+            <Input editable={editable} placeholder="Descrição" onChangeText={setDescription} value={description}/>
+            <InputPhone
               editable={editable}
               placeholder="WhatsApp"
               onChangeText={(masked: any, unmasked: any) => { setWhats(masked); }}
               mask={['(', /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/]}
-              value={whats} /><View>
+              value={whats} />
+              <View>
                 <Picker editable={editable} setLogo={setLogo} logo={logo} url={url} isLoading={isLoading} pickerText={'Add Logo'} />
-              </View></>
+              </View>
+            </>
           }
         </Form>
       </Container>

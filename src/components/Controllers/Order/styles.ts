@@ -23,6 +23,7 @@ export const TextTitle = styled.Text`
   color: ${({ theme }) => theme.COLORS.TEXT};
   margin-top: 2%;
   margin-bottom: 1%;
+  max-width: 70%;
 `;
 
 export const TextDescription = styled.Text`

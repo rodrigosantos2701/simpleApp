@@ -104,8 +104,8 @@ export function OrderForm() {
   return (
     <Form>
       <Title>Novo Produto/Serviço</Title>
-      <Input placeholder="Nome" onChangeText={setName} value={name} />
-      <Input placeholder="Descrição" onChangeText={setDescription} value={description} />
+      <Input placeholder="Nome" onChangeText={setName} value={name}  maxLength={50} />
+      <Input placeholder="Descrição" onChangeText={setDescription} value={description}  maxLength={70} />
       <Input placeholder="Preço" onChangeText={setPrice} value={price} />
       <Picker editable={true} setLogo={setImg} logo={img} url={url} isLoading={false} pickerText={'Add Image'} />
       <Button title="Salvar" isLoading={isLoading} onPress={handleSaveItems} style={{ marginTop: 10, marginBottom: 10 }} />
