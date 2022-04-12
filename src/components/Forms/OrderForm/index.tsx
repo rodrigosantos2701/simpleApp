@@ -36,7 +36,7 @@ export function OrderForm() {
 
   useEffect(() => {
     handleGetItems()
-  }, [user])
+  }, [])
 
 
   const formValidation = () => {
@@ -47,8 +47,8 @@ export function OrderForm() {
 
   async function handleGetItems() {
     if (user) {
-      const docRef = doc(firestore, user.uid, id);
-      const docSnap = await getDoc(docRef);
+      // const docRef = doc(firestore, user.uid, id);
+      // const docSnap = await getDoc(docRef);
 
       setUserId(user.uid)
 

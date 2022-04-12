@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, memo} from 'react';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useTheme } from 'styled-components/native';
 import { Image, View } from 'react-native';
@@ -11,6 +11,7 @@ import { getStorage, ref, deleteObject } from "firebase/storage";
 import { RemoveButton } from '../RemoveButton';
 
 import { Container, Box, TextTitle, ButtonContainer, ContainerLoader, TextDescription } from './styles';
+import { set } from 'react-native-reanimated';
 
 
 export type OrderProps =  {
@@ -28,12 +29,14 @@ type Props = {
 };
 
 
-export function Order({ data, userId, setItemDelete }: Props) {
+function Order({ data, userId, setItemDelete }: Props) {
   const theme = useTheme();
   const [isLoading, setIsLoading] = useState(false);
+  const [ hasImage, setHasImage ]=  useState(data.url)
 
 
   const DeleteItem = async (dataId: string) => {
+    console.log('=======DELETE=======')
     let item = dataId
     setItemDelete(item)
     const storage = getStorage();
@@ -57,5 +60,7 @@ export function Order({ data, userId, setItemDelete }: Props) {
         </Box>
       </Container>
     );
-    
+
 }
+
+export default memo(Order)

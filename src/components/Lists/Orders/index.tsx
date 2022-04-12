@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { FlatList } from 'react-native';
 import { collection, addDoc, setDoc, doc, getDoc, query, where, getDocs, deleteDoc } from "firebase/firestore";
 import { firestore } from '../../../services/firebase';
@@ -7,7 +7,8 @@ import { MaterialIcons } from '@expo/vector-icons';
 
 import { Load } from '@components/Animations/Load';
 import { Filters } from '@components/Controllers/Filters';
-import { Order, OrderProps } from '@components/Controllers/Order';
+import { OrderProps } from '@components/Controllers/Order';
+import Order from '@components/Controllers/Order'
 import { Container, Header, Title, Counter } from './styles';
 import { ConfigurationForm } from '@components/Forms/ConfigurationForm';
 import { QrCode } from '@components/Forms/QrCodeForm';
@@ -45,6 +46,8 @@ export function Orders() {
   };
 
    const handleGetItems = async () => {
+    console.log('====GET-ITEMS=LIST======')
+
      setIsLoading(true)
     let a: OrderProps[] = []
     if (user) {
@@ -69,6 +72,7 @@ export function Orders() {
     
   }
 
+
   return (
     <Container>
       <Filters onFilter={setStatus} />
@@ -85,7 +89,8 @@ export function Orders() {
           ? <QrCode userId={userId} />
           : isLoading
             ? <Load />
-            : <FlatList
+            : 
+             <FlatList
               data={orders}
               keyExtractor={item => item.id}
               renderItem={({ item }) => <Order data={item} setItemDelete={setItemDelete} userId={userId}  />}
