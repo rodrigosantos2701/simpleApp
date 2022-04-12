@@ -1,9 +1,19 @@
 import styled from 'styled-components/native';
 
+
+
+export const ConfigContainer = styled.View`
+  width: 100%;
+  margin-bottom: 0px;
+  align-items: flex-start;
+`
+
+
 export const Container = styled.View`
   width: 100%;
   margin-bottom: 32px;
-`;
+  align-items: center;
+`
 
 export const Title = styled.Text`
   font-size: 14px;
