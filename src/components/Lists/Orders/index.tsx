@@ -1,9 +1,10 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo, memo, useCallback } from 'react';
 import { FlatList } from 'react-native';
-import { collection, addDoc, setDoc, doc, getDoc, query, where, getDocs, deleteDoc } from "firebase/firestore";
+import { doc, deleteDoc } from "firebase/firestore";
 import { firestore } from '../../../services/firebase';
 import { getAuth } from "firebase/auth";
 import { MaterialIcons } from '@expo/vector-icons';
+import { collection, query, where, getDocs } from "firebase/firestore";
 
 import { Load } from '@components/Animations/Load';
 import { Filters } from '@components/Controllers/Filters';
@@ -14,63 +15,62 @@ import { ConfigurationForm } from '@components/Forms/ConfigurationForm';
 import { QrCode } from '@components/Forms/QrCodeForm';
 
 
-export function Orders() {
+export const Orders = () => {
   const [status, setStatus] = useState('Itens');
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [orders, setOrders] = useState<OrderProps[]>([]);
   const [itemDelete, setItemDelete] = useState('');
   const [userId, setUserId] = useState('')
-  const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
-  const [id, setId] = useState('');
-  const [price, setPrice] = useState('');
-  const [url, setUrl] = useState('');
+  const [firstLoad, setFirstLoad] = useState(true);
 
   const auth = getAuth();
   const user = auth.currentUser;
 
-  useEffect(() => {
-    handleGetItems()
-  }, []);
-
 
   useEffect(() => {
     RemoveItemFromFirebase()
-  },[itemDelete])
+  }, [itemDelete])
 
   const RemoveItemFromFirebase = async () => {
-    await deleteDoc(doc(firestore, userId, itemDelete ))
+    await deleteDoc(doc(firestore, userId, itemDelete))
     setOrders(orders => {
       return orders.filter(item => item.id !== itemDelete);
     });
   };
 
-   const handleGetItems = async () => {
-    console.log('====GET-ITEMS=LIST======')
-
-     setIsLoading(true)
+  const handleGetItems = useCallback(async () => {
     let a: OrderProps[] = []
+
     if (user) {
-      const q = query(collection(firestore, user.uid), where("id", "!=", '' ));
-      const querySnapshot = await getDocs(q);
+      console.log('GET-ITEMS')
+      const q = query(collection(firestore, user.uid), where("id", "!=", ''));
+      const querySnapshot = await getDocs(q)
+
       querySnapshot.docs.map((doc) => {
         let newDoc = doc.data()
         let addDoc: OrderProps = {
           "description": newDoc.description,
-          "id":  newDoc.id,
-          "name":  newDoc.name,
+          "id": newDoc.id,
+          "name": newDoc.name,
           "price": newDoc.price,
-          "url":  newDoc.url,
+          "url": newDoc.url,
         }
         a.push(addDoc)
         setOrders([...a])
       });
       setUserId(user.uid)
     }
+    setTimeout(() => { setIsLoading(false), setFirstLoad(false) }, 1000)
 
-    setTimeout(() => {setIsLoading(false)}, 1000)
-    
   }
+    , [])
+
+  useEffect(() => {
+    if (firstLoad) {
+      handleGetItems()
+    }
+    setFirstLoad(false)
+  }, [])
 
 
   return (
@@ -78,10 +78,10 @@ export function Orders() {
       <Filters onFilter={setStatus} />
 
       <Header>
-      {status === 'Itens' ? <Title >{status} ({orders.length})</Title> : <Title >{status}</Title>}
-      {status === 'Itens' ? <MaterialIcons name='refresh' size={26} onPress={handleGetItems}></MaterialIcons>: <Counter/>}
+        {status === 'Itens' ? <Title >{status} ({orders.length})</Title> : <Title >{status}</Title>}
+        {status === 'Itens' ? <MaterialIcons name='refresh' size={26} onPress={handleGetItems}></MaterialIcons> : <Counter />}
       </Header>
-        
+
 
       {status === 'Configuração'
         ? <ConfigurationForm />
@@ -89,11 +89,11 @@ export function Orders() {
           ? <QrCode userId={userId} />
           : isLoading
             ? <Load />
-            : 
-             <FlatList
+            :
+            <FlatList
               data={orders}
               keyExtractor={item => item.id}
-              renderItem={({ item }) => <Order data={item} setItemDelete={setItemDelete} userId={userId}  />}
+              renderItem={({ item }) => <Order key={item.id} data={item} setItemDelete={setItemDelete} userId={userId} />}
               contentContainerStyle={{ paddingBottom: 100 }}
               showsVerticalScrollIndicator={false}
               style={{ flex: 1 }}
