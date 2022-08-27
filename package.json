@@ -39,6 +39,7 @@
     "react-native-screens": "~3.10.1",
     "react-native-svg": "^12.3.0",
     "react-native-web": "0.17.1",
+    "react-native-webview": "^11.23.0",
     "styled-components": "^5.3.3",
     "uuid": "^8.3.2"
   },
