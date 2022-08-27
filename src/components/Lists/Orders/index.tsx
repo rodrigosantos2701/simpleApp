@@ -41,6 +41,7 @@ export const Orders = ({setPrimaryButton}: any) => {
   const handleGetItems = useCallback(async () => {
     let a: OrderProps[] = []
 
+
     if (user) {
       const q = query(collection(firestore, user.uid), where("id", "!=", ''));
       const querySnapshot = await getDocs(q)
@@ -77,8 +78,8 @@ export const Orders = ({setPrimaryButton}: any) => {
       <Filters setPrimaryButton={setPrimaryButton} onFilter={setStatus} />
 
       <Header>
-        {status === 'Itens' ? <Title >{status} ({orders.length})</Title> : <Title >{status}</Title>}
-        {status === 'Itens' ? <MaterialIcons name='refresh' size={26} onPress={handleGetItems}></MaterialIcons> : <Counter />}
+          {status === 'Itens' ? <Title >{status} ({orders.length})</Title> : <Title >{status}</Title>}
+          {status === 'Itens' ? <MaterialIcons name='refresh' size={26} onPress={handleGetItems}></MaterialIcons>  : <Counter  />}
       </Header>
 
 
@@ -89,6 +90,7 @@ export const Orders = ({setPrimaryButton}: any) => {
           : isLoading
             ? <Load />
             :
+           
             <FlatList
               data={orders}
               keyExtractor={item => item.id}
@@ -102,3 +104,4 @@ export const Orders = ({setPrimaryButton}: any) => {
     </Container>
   );
 }
+
