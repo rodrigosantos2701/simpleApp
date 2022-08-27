@@ -6,8 +6,8 @@ export const Form = styled.View`
 
 export const Container = styled.View`
   width: 95%;
-  margin-bottom: 50%;
   align-items: flex-end;
+  margin-top: 0px
 
 `;
 
@@ -21,10 +21,11 @@ export const TextInfo = styled.Text`
 
 
 export const ButtonContainer = styled.View`
-  margin-bottom: 15px;
-  width: 25%;
+margin-top: 0px;
+  margin-bottom: 4px;
+  width: 50%;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: flex-end;
 `;
 
 

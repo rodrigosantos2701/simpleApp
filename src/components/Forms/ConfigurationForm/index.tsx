@@ -14,8 +14,8 @@ import { InputPhone } from '@components/Controllers/InputPhone';
 import { Picker } from '../../Controllers/ImagePicker';
 import { EditButton } from '@components/Controllers/EditButton';
 import { SaveButton } from '@components/Controllers/SaveButton';
-import { Button } from '@components/Controllers/Button';
 import { Load } from '../../Animations/Load'
+import {saveOnStorage} from '../../../services/firebaseStorage'
 
 
 
@@ -37,6 +37,7 @@ export function ConfigurationForm() {
   useEffect(() => {
     handleGetDataConfigurations()
   }, [user])
+
 
 
   async function handleGetDataConfigurations() {
@@ -66,42 +67,32 @@ export function ConfigurationForm() {
 
     if (ifExists) {
       const upDateRef = doc(firestore, userId, "config");
+      
 
       await updateDoc(upDateRef, {
         company,
         description,
         whats,
-        url
+        url:logo,
       });
       setEditable(false)
       alert('Atualizado com sucesso!')
-    } else {
-      // const docRef = doc(firestore, userId, 'config');
-      const companyRef = collection(firestore, userId);
+      saveOnStorage({configData : true, userId} as any)
+    } 
 
-      const storage = getStorage();
-      const storageRef = ref(storage, userId + '/logo.jpg');
+    else {
+      const upDateRef = doc(firestore, userId, "config");
 
-      //Convert img 
-      const img = await fetch(logo)
-      const bytes = await img.blob()
-      await uploadBytes(storageRef, bytes)
-
-      // //getURL
-      const url = await getDownloadURL(ref(storage, userId + '/logo.jpg'))
-
-      setUrl(url)
-      setLogo(null)
-
-      await setDoc(doc(companyRef, 'config'), {
+      await setDoc(upDateRef, {
         company,
         description,
         whats,
-        url
-
-      })
-      Alert.alert(("Salvo com sucesso!"))
+        url:logo,
+      });
       setEditable(false)
+      alert('Criado com sucesso!')
+
+      saveOnStorage({configData : true, userId} as any)
 
 
     }

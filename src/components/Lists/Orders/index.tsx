@@ -15,7 +15,7 @@ import { ConfigurationForm } from '@components/Forms/ConfigurationForm';
 import { QrCode } from '@components/Forms/QrCodeForm';
 
 
-export const Orders = () => {
+export const Orders = ({setPrimaryButton}: any) => {
   const [status, setStatus] = useState('Itens');
   const [isLoading, setIsLoading] = useState(false);
   const [orders, setOrders] = useState<OrderProps[]>([]);
@@ -41,8 +41,8 @@ export const Orders = () => {
   const handleGetItems = useCallback(async () => {
     let a: OrderProps[] = []
 
+
     if (user) {
-      console.log('GET-ITEMS')
       const q = query(collection(firestore, user.uid), where("id", "!=", ''));
       const querySnapshot = await getDocs(q)
 
@@ -75,11 +75,11 @@ export const Orders = () => {
 
   return (
     <Container>
-      <Filters onFilter={setStatus} />
+      <Filters setPrimaryButton={setPrimaryButton} onFilter={setStatus} />
 
       <Header>
-        {status === 'Itens' ? <Title >{status} ({orders.length})</Title> : <Title >{status}</Title>}
-        {status === 'Itens' ? <MaterialIcons name='refresh' size={26} onPress={handleGetItems}></MaterialIcons> : <Counter />}
+          {status === 'Itens' ? <Title >{status} ({orders.length})</Title> : <Title >{status}</Title>}
+          {status === 'Itens' ? <MaterialIcons name='refresh' size={26} onPress={handleGetItems}></MaterialIcons>  : <Counter  />}
       </Header>
 
 
@@ -90,6 +90,7 @@ export const Orders = () => {
           : isLoading
             ? <Load />
             :
+           
             <FlatList
               data={orders}
               keyExtractor={item => item.id}
@@ -103,3 +104,4 @@ export const Orders = () => {
     </Container>
   );
 }
+
