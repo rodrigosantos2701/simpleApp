@@ -55,7 +55,7 @@ export function ConfigurationForm() {
         setIfExists(true)
 
       } else {
-        console.log('empty database');
+        console.log('empty-database');
       }
     }
     setTimeout(() => { setIsLoading(false) }, 1000)
