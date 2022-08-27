@@ -38,10 +38,8 @@ export const Orders = ({setPrimaryButton}: any) => {
     });
   };
 
-  const handleGetItems = useCallback(async () => {
+  const handleGetItems = async () => {
     let a: OrderProps[] = []
-
-
     if (user) {
       const q = query(collection(firestore, user.uid), where("id", "!=", ''));
       const querySnapshot = await getDocs(q)
@@ -63,7 +61,7 @@ export const Orders = ({setPrimaryButton}: any) => {
     setTimeout(() => { setIsLoading(false), setFirstLoad(false) }, 1000)
 
   }
-    , [])
+
 
   useEffect(() => {
     if (firstLoad) {
@@ -94,7 +92,7 @@ export const Orders = ({setPrimaryButton}: any) => {
             <FlatList
               data={orders}
               keyExtractor={item => item.id}
-              renderItem={({ item }) => <Order key={item.id} data={item} setItemDelete={setItemDelete} userId={userId} />}
+              renderItem={({ item }) => <Order handleGetItems={handleGetItems} key={item.id} data={item} setItemDelete={setItemDelete} userId={userId} />}
               contentContainerStyle={{ paddingBottom: 100 }}
               showsVerticalScrollIndicator={false}
               style={{ flex: 1 }}

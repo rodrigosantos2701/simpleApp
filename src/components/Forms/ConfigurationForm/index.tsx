@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from 'react';
 
-import { collection, addDoc, setDoc, doc, getDoc, deleteDoc, updateDoc } from "firebase/firestore";
+import { setDoc, doc, getDoc, updateDoc } from "firebase/firestore";
 import { firestore } from '../../../services/firebase';
 import { getAuth } from "firebase/auth";
-import { getStorage, ref, getDownloadURL, uploadBytes } from "firebase/storage";
 
 import { Form, TextInfo, Container, ButtonContainer } from './styles';
-import { Alert, View, Image, ScrollView } from 'react-native';
-import MaskInput from 'react-native-mask-input';
+import { View, ScrollView } from 'react-native';
 
 import { Input } from '@components/Controllers/Input';
 import { InputPhone } from '@components/Controllers/InputPhone';
@@ -15,7 +13,7 @@ import { Picker } from '../../Controllers/ImagePicker';
 import { EditButton } from '@components/Controllers/EditButton';
 import { SaveButton } from '@components/Controllers/SaveButton';
 import { Load } from '../../Animations/Load'
-import {saveOnStorage} from '../../../services/firebaseStorage'
+import { saveOnStorage } from '../../../services/firebaseStorage'
 
 
 
@@ -67,40 +65,30 @@ export function ConfigurationForm() {
 
     if (ifExists) {
       const upDateRef = doc(firestore, userId, "config");
-      
-
       await updateDoc(upDateRef, {
         company,
         description,
         whats,
-        url:logo,
+        url: logo,
       });
       setEditable(false)
       alert('Atualizado com sucesso!')
-      saveOnStorage({configData : true, userId} as any)
-    } 
-
-    else {
+    } else {
       const upDateRef = doc(firestore, userId, "config");
-
       await setDoc(upDateRef, {
         company,
         description,
         whats,
-        url:logo,
+        url: logo,
       });
       setEditable(false)
-      alert('Criado com sucesso!')
-
-      saveOnStorage({configData : true, userId} as any)
-
-
+      alert('Salvo com sucesso!')
     }
-
+    await saveOnStorage({ isConfigData: true, userId, logo } as any)
   }
 
   return (
-    <ScrollView showsVerticalScrollIndicator={false}> 
+    <ScrollView showsVerticalScrollIndicator={false}>
       <Container >
         <ButtonContainer>
           <TextInfo>{editable ? 'Salvar' : 'Editar'}</TextInfo>
@@ -113,14 +101,14 @@ export function ConfigurationForm() {
         <Form>
           {isLoading ? <Load /> :
             <>
-            <Input editable={editable} placeholder="Empresa" onChangeText={setCompany} value={company} />
-            <Input editable={editable} placeholder="Descrição" onChangeText={setDescription} value={description}/>
-            <InputPhone
-              editable={editable}
-              placeholder="WhatsApp"
-              onChangeText={(masked: any, unmasked: any) => { setWhats(masked); }}
-              mask={['(', /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/]}
-              value={whats} />
+              <Input editable={editable} placeholder="Empresa" onChangeText={setCompany} value={company} />
+              <Input editable={editable} placeholder="Descrição" onChangeText={setDescription} value={description} />
+              <InputPhone
+                editable={editable}
+                placeholder="WhatsApp"
+                onChangeText={(masked: any, unmasked: any) => { setWhats(masked); }}
+                mask={['(', /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/]}
+                value={whats} />
               <View>
                 <Picker editable={editable} setLogo={setLogo} logo={logo} url={url} isLoading={isLoading} pickerText={'Add Logo'} />
               </View>

@@ -1,18 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { collection, addDoc, setDoc, doc, getDoc, updateDoc } from "firebase/firestore";
+import { setDoc, doc } from "firebase/firestore";
 import { firestore } from '../../../services/firebase';
 import { getAuth } from "firebase/auth";
-import { getStorage, ref, getDownloadURL, uploadBytes } from "firebase/storage";
 import 'react-native-get-random-values';
 import { v4 as uuidv4 } from 'uuid';
 
-import { Picker, PickerProps } from '../../Controllers/ImagePicker';
+import { Picker } from '../../Controllers/ImagePicker';
 
 import { Form, Title } from './styles';
 import { Input } from '@components/Controllers/Input';
 import { Button } from '@components/Controllers/Button';
-import { TextArea } from '@components/Controllers/TextArea';
-import { Alert, View } from 'react-native';
+import { Alert } from 'react-native';
 import { saveOnStorage } from '../../../services/firebaseStorage';
 
 
@@ -56,7 +54,6 @@ export function OrderForm() {
   }
 
   async function handleSaveItems() {
-    saveOnStorage(userId as any)
     setIsLoading(true)
     let isValid = formValidation()
 
@@ -75,6 +72,8 @@ export function OrderForm() {
         url:logo,
 
       })
+
+      
       Alert.alert(("Salvo com sucesso!"))
       setName('')
       setDescription('')
@@ -84,6 +83,7 @@ export function OrderForm() {
       setIsLoading(false)
       setLogo('')
     }
+    await saveOnStorage({ isConfigData: false, userId, logo, id } as any)
   }
 
 
@@ -97,4 +97,8 @@ export function OrderForm() {
       <Button title="Salvar" isLoading={isLoading} onPress={handleSaveItems} style={{ marginTop: 10, marginBottom: 10 }} />
     </Form>
   );
+}
+
+function isConfigData(isConfigData: any, arg1: { false: any; }, userId: string, logo: any, id: string) {
+  throw new Error('Function not implemented.');
 }

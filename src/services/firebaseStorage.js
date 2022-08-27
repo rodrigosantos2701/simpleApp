@@ -1,45 +1,46 @@
-import React, { useEffect, useState } from 'react';
-import { collection, addDoc, setDoc, doc, getDoc, updateDoc } from "firebase/firestore";
-import { firestore } from './firebase';
-import { getAuth } from "firebase/auth";
-import { getStorage, ref, getDownloadURL, uploadBytes } from "firebase/storage";
+import { getStorage, ref, uploadBytes, deleteObject } from "firebase/storage";
 import 'react-native-get-random-values';
-import { v4 as uuidv4 } from 'uuid';
 
 
+export const saveOnStorage = async ({ isConfigData, userId, logo, id }) => {
 
-const auth = getAuth();
-const user = auth.currentUser;
-const id = uuidv4()
-
-
-export const saveOnStorage  = async ({configData, userId}) =>   {
-    console.log('%cMyProject%cline:16%cuserId', 'color:#fff;background:#ee6f57;padding:3px;border-radius:2px', 'color:#fff;background:#1f3c88;padding:3px;border-radius:2px', 'color:#fff;background:rgb(131, 175, 155);padding:3px;border-radius:2px', userId)
+  console.log('-------------SAVE----------------');
+  console.log(isConfigData);
+  console.log(userId);
+  console.log(id);
 
 
+  console.log('------------------------------------');
 
-    if (configData) {
-        id = 'config'
-        return
-    }
+  if (isConfigData) { id = 'config' }
+  const storage = getStorage();
+  const storageRef = ref(storage, userId + '/' + id);
 
-    const companyRef = collection(firestore, userId);
+  //Convert img         
+  const img = await fetch(logo)
+  const bytes = await img.blob()
+  await uploadBytes(storageRef, bytes)
 
-    const storage = getStorage();
-    const storageRef = ref(storage, userId + id);
+  console.log('------------------------------------');
+  console.log('SALVO COM SUCESSSO');
+  console.log('------------------------------------');
 
-  //   //Convert img 
-    const img = await fetch(logo)
-    const bytes = await img.blob()
-    await uploadBytes(storageRef, bytes)
+}
 
-  //   // //getURL
-    const url = await getDownloadURL(ref(storage, userId + id))
+export const deleteFromStorage = async (id) => {
+  console.log('------------DELETE----------------');
+  console.log(id);
+  console.log('------------------------------------');
 
-    // await setDoc(doc(companyRef, 'config'), {
-    //   url
+  const storage = getStorage();
+  const deleteRef = ref(storage, userId + '/' + id);
 
-    // })
-    console.log((" ===> Salvo com sucesso!"))
+  // Delete the file
+  deleteObject(deleteRef)
+
+  console.log('------------------------------------');
+  console.log('DELETED');
+  console.log('------------------------------------');
+
 
 }
