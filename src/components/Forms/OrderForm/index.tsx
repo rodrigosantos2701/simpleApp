@@ -99,6 +99,3 @@ export function OrderForm() {
   );
 }
 
-function isConfigData(isConfigData: any, arg1: { false: any; }, userId: string, logo: any, id: string) {
-  throw new Error('Function not implemented.');
-}

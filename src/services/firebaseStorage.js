@@ -3,9 +3,11 @@ import 'react-native-get-random-values';
 
 
 export const saveOnStorage = async ({ isConfigData, userId, logo, id }) => {
+
+
   
 const storage = getStorage();
-console.log(logo)
+
   if (isConfigData) { id = 'config' };
   const storageRef = ref(storage, userId + '/' + id);
   if (logo == null) return;
