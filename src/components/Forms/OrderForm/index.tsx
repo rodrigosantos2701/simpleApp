@@ -50,10 +50,10 @@ export function OrderForm() {
         console.log('error');
       }
     }
+    const isValid = formValidation()
 
   async function handleSaveItems() {
     setIsLoading(true)
-    let isValid = formValidation()
 
     if (!isValid) {
       alert('Preencher todos os campos e selecionar uma imagem ')
@@ -97,7 +97,7 @@ export function OrderForm() {
       <Input placeholder="Descrição" onChangeText={setDescription} value={description}  maxLength={70} />
       <Input placeholder="Preço" onChangeText={setPrice} value={price} />
       <Picker editable={true} setLogo={setLogo} logo={logo} url={url} isLoading={false} pickerText={'Add Image'} />
-      <Button title="Salvar" isLoading={isLoading} onPress={handleSaveItems} style={{ marginTop: 10, marginBottom: 10 }} />
+      <Button title="Salvar"  enabled={logo && isValid? true :false} isLoading={isLoading} onPress={handleSaveItems} style={{ marginTop: 10, marginBottom: 10  }} />
     </Form>
   );
 }

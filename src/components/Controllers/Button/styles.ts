@@ -7,7 +7,7 @@ export const Container = styled(RectButton)`
   border-radius: 12px;
   justify-content: center;
   align-items: center;
-  background-color: ${({ theme }) => theme.COLORS.PRIMARY};
+  background-color: ${({ theme, enabled }) => enabled? theme.COLORS.PRIMARY : 'lightgray'};
 `;
 
 export const Title = styled.Text`
