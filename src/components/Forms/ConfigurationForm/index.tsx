@@ -48,6 +48,7 @@ export function ConfigurationForm() {
       if (docSnap.exists()) {
         const config = docSnap.data()
         const configData = config
+
         setCompany(configData.company)
         setDescription(configData.description)
         setWhats(configData.whats)
@@ -63,13 +64,14 @@ export function ConfigurationForm() {
 
   async function handleSaveConfigurations() {
     try{
+      
       if (ifExists) {
         const upDateRef = doc(firestore, userId, "config");
         await updateDoc(upDateRef, {
           company,
           description,
           whats,
-          url,
+          url: logo || '',
         });
         setEditable(false)
         saveOnStorage({ isConfigData: true, userId, logo,  }  as any)
@@ -89,7 +91,6 @@ export function ConfigurationForm() {
     }
     catch(error){console.log(error)}
     }
-
 
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
@@ -117,6 +118,7 @@ export function ConfigurationForm() {
                 <Picker editable={editable} setLogo={setLogo} logo={logo} url={url} isLoading={isLoading} pickerText={'Add Logo'} />
               </View>
             </>
+
           }
         </Form>
       </Container>
