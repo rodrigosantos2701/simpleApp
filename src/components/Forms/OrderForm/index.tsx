@@ -44,14 +44,12 @@ export function OrderForm() {
   }
 
   async function handleGetItems() {
-    if (user) {
-
-      setUserId(user.uid)
-
-    } else {
-      console.log('error');
+      if (user) {
+        setUserId(user.uid)
+      } else {
+        console.log('error');
+      }
     }
-  }
 
   async function handleSaveItems() {
     setIsLoading(true)
@@ -60,18 +58,23 @@ export function OrderForm() {
     if (!isValid) {
       alert('Preencher todos os campos e selecionar uma imagem ')
       setIsLoading(false)
-
     } else {
-      const upDateRef = doc(firestore, userId, id);
 
+    try {
+      const upDateRef = doc(firestore, userId, id);
       await setDoc(upDateRef, {
         id,
         name,
         description,
         price,
-        url:logo,
-
+        url: logo,
+        
       })
+    } catch(error) {console.log(error)
+  
+
+    } 
+      
 
       
       Alert.alert(("Salvo com sucesso!"))

@@ -62,30 +62,34 @@ export function ConfigurationForm() {
   }
 
   async function handleSaveConfigurations() {
-
-    if (ifExists) {
-      const upDateRef = doc(firestore, userId, "config");
-      await updateDoc(upDateRef, {
-        company,
-        description,
-        whats,
-        url: logo,
-      });
-      setEditable(false)
-      alert('Atualizado com sucesso!')
-    } else {
-      const upDateRef = doc(firestore, userId, "config");
-      await setDoc(upDateRef, {
-        company,
-        description,
-        whats,
-        url: logo,
-      });
-      setEditable(false)
-      alert('Salvo com sucesso!')
+    try{
+      if (ifExists) {
+        const upDateRef = doc(firestore, userId, "config");
+        await updateDoc(upDateRef, {
+          company,
+          description,
+          whats,
+          url,
+        });
+        setEditable(false)
+        saveOnStorage({ isConfigData: true, userId, logo,  }  as any)
+        alert('Atualizado com sucesso!')
+      } else {
+        const upDateRef = doc(firestore, userId, "config");
+        await setDoc(upDateRef, {
+          company,
+          description,
+          whats,
+          url: logo,
+        });
+        setEditable(false)
+        alert('Salvo com sucesso!')
+        saveOnStorage({ isConfigData: true, userId, logo,  }  as any)
+      }
     }
-    await saveOnStorage({ isConfigData: true, userId, logo } as any)
-  }
+    catch(error){console.log(error)}
+    }
+
 
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
