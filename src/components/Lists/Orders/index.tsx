@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo, memo, useCallback } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FlatList } from 'react-native';
 import { doc, deleteDoc } from "firebase/firestore";
 import { firestore } from '../../../services/firebase';
@@ -10,7 +10,7 @@ import { Load } from '@components/Animations/Load';
 import { Filters } from '@components/Controllers/Filters';
 import { OrderProps } from '@components/Controllers/Order';
 import Order from '@components/Controllers/Order'
-import { Container, Header, Title, Counter } from './styles';
+import { Container, Header, Title } from './styles';
 import { ConfigurationForm } from '@components/Forms/ConfigurationForm';
 import { QrCode } from '@components/Forms/QrCodeForm';
 
@@ -77,7 +77,7 @@ export const Orders = ({setPrimaryButton}: any) => {
 
       <Header>
           {status === 'Itens' ? <Title >{status} ({orders.length})</Title> : <Title >{status}</Title>}
-          {status === 'Itens' ? <MaterialIcons name='refresh' size={26} onPress={handleGetItems}></MaterialIcons>  : <Counter  />}
+          {status === 'Itens' ? <MaterialIcons rotate={180} name='refresh' size={26} onPress={handleGetItems}></MaterialIcons> : null}
       </Header>
 
 
