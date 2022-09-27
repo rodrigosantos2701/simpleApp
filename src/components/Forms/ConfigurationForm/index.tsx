@@ -27,6 +27,7 @@ export function ConfigurationForm() {
   const [userId, setUserId] = useState('')
   const [logo, setLogo] = useState<any>();
   const [url, setUrl] = useState('');
+  const [uri, setUri] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [ifExists, setIfExists] = useState(false)
 
@@ -54,6 +55,8 @@ export function ConfigurationForm() {
         setDescription(configData.description)
         setWhats(configData.whats)
         setUrl(configData.url)
+        setUri(configData.uri)
+
         setIfExists(true)
 
       } else {
@@ -64,6 +67,7 @@ export function ConfigurationForm() {
   }
 
   async function handleSaveConfigurations() {
+    
     try{
       if (ifExists) {
         const storage = getStorage();
@@ -78,15 +82,14 @@ export function ConfigurationForm() {
           company,
           description,
           whats,
-          url: logo || '',
-          uri: uri,
+          url: logo,
+          uri,
         });
         setEditable(false)
         await uploadBytes(storageRef, bytes)
         alert('Atualizado com sucesso!')
-
+        
       } else {
-
         saveOnStorage({ isConfigData: true, userId, logo  }  as any)
         const storage = getStorage();
         const storageRef = ref(storage, userId + '/' + "config");
@@ -97,7 +100,7 @@ export function ConfigurationForm() {
           company,
           description,
           whats,
-          url: logo || '',
+          url: logo,
           uri: uri,
 
         });

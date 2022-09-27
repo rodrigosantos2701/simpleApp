@@ -25,8 +25,9 @@ export function OrderForm() {
   const [userId, setUserId] = useState('')
   const [img, setImg] = useState<any>();
   const [url, setUrl] = useState('');
-  const [uri, setUri] = useState('');
+  // const [uri, setUri] = useState('');
   const [logo, setLogo] = useState<any>();
+
 
   const auth = getAuth();
   const user = auth.currentUser;
@@ -65,7 +66,7 @@ export function OrderForm() {
       const firebaseRef = doc(firestore, userId, id);
       const storage = getStorage();
 
-      if (logo == null) return;
+      if (!logo || logo == null || logo == undefined) return;
 
       //Convert img         
       const img = await fetch(logo)
@@ -73,7 +74,6 @@ export function OrderForm() {
       const storageRef = ref(storage, userId + '/' + id);
       await uploadBytes(storageRef, bytes)
       const uri = await getDownloadURL(ref(storageRef))
-      
       await setDoc(firebaseRef, {
         id,
         name,
@@ -82,9 +82,6 @@ export function OrderForm() {
         url: logo,
         uri: uri,
       });
-
-    } catch(error) {console.log(error)} 
-    
       Alert.alert(("Salvo com sucesso!"))
       setName('')
       setDescription('')
@@ -93,9 +90,9 @@ export function OrderForm() {
       setImg('')
       setIsLoading(false)
       setLogo('')
+    } catch(error) {console.log(error)} 
     }
   }
-
 
   return (
     <Form>
