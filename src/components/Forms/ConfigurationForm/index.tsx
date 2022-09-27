@@ -14,6 +14,8 @@ import { EditButton } from '@components/Controllers/EditButton';
 import { SaveButton } from '@components/Controllers/SaveButton';
 import { Load } from '../../Animations/Load'
 import { saveOnStorage } from '../../../services/firebaseStorage'
+import { getStorage, ref, uploadBytes, deleteObject, getDownloadURL } from "firebase/storage";
+
 
 
 
@@ -35,7 +37,6 @@ export function ConfigurationForm() {
   useEffect(() => {
     handleGetDataConfigurations()
   }, [user])
-
 
 
   async function handleGetDataConfigurations() {
@@ -64,29 +65,44 @@ export function ConfigurationForm() {
 
   async function handleSaveConfigurations() {
     try{
-      
       if (ifExists) {
-        const upDateRef = doc(firestore, userId, "config");
-        await updateDoc(upDateRef, {
+        const storage = getStorage();
+        const firebaseRef = doc(firestore, userId, "config");
+        const storageRef = ref(storage, userId + '/' + "config");
+       
+        const img = await fetch(logo)
+        const bytes = await img.blob()
+        const uri = await getDownloadURL(ref(storageRef))
+
+        await updateDoc(firebaseRef, {
           company,
           description,
           whats,
           url: logo || '',
+          uri: uri,
         });
         setEditable(false)
-        saveOnStorage({ isConfigData: true, userId, logo,  }  as any)
+        await uploadBytes(storageRef, bytes)
         alert('Atualizado com sucesso!')
+
       } else {
-        const upDateRef = doc(firestore, userId, "config");
-        await setDoc(upDateRef, {
+
+        saveOnStorage({ isConfigData: true, userId, logo  }  as any)
+        const storage = getStorage();
+        const storageRef = ref(storage, userId + '/' + "config");
+        const firebaseRef = doc(firestore, userId, "config");
+        const uri = await getDownloadURL(ref(storageRef))
+
+        await setDoc(firebaseRef, {
           company,
           description,
           whats,
-          url: logo,
+          url: logo || '',
+          uri: uri,
+
         });
         setEditable(false)
         alert('Salvo com sucesso!')
-        saveOnStorage({ isConfigData: true, userId, logo,  }  as any)
       }
     }
     catch(error){console.log(error)}

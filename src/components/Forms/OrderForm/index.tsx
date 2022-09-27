@@ -4,6 +4,7 @@ import { firestore } from '../../../services/firebase';
 import { getAuth } from "firebase/auth";
 import 'react-native-get-random-values';
 import { v4 as uuidv4 } from 'uuid';
+import { getStorage, ref, uploadBytes, deleteObject, getDownloadURL } from "firebase/storage";
 
 import { Picker } from '../../Controllers/ImagePicker';
 
@@ -24,13 +25,12 @@ export function OrderForm() {
   const [userId, setUserId] = useState('')
   const [img, setImg] = useState<any>();
   const [url, setUrl] = useState('');
+  const [uri, setUri] = useState('');
   const [logo, setLogo] = useState<any>();
-
 
   const auth = getAuth();
   const user = auth.currentUser;
   const id = uuidv4()
-
 
   useEffect(() => {
     handleGetItems()
@@ -43,6 +43,8 @@ export function OrderForm() {
     }
   }
 
+  const isValid = formValidation()
+
   async function handleGetItems() {
       if (user) {
         setUserId(user.uid)
@@ -50,33 +52,39 @@ export function OrderForm() {
         console.log('error');
       }
     }
-    const isValid = formValidation()
-
+  
   async function handleSaveItems() {
     setIsLoading(true)
-
     if (!isValid) {
       alert('Preencher todos os campos e selecionar uma imagem ')
       setIsLoading(false)
+    
     } else {
 
     try {
-      const upDateRef = doc(firestore, userId, id);
-      await setDoc(upDateRef, {
+      const firebaseRef = doc(firestore, userId, id);
+      const storage = getStorage();
+
+      if (logo == null) return;
+
+      //Convert img         
+      const img = await fetch(logo)
+      const bytes = await img.blob()
+      const storageRef = ref(storage, userId + '/' + id);
+      await uploadBytes(storageRef, bytes)
+      const uri = await getDownloadURL(ref(storageRef))
+      
+      await setDoc(firebaseRef, {
         id,
         name,
         description,
         price,
         url: logo,
-        
-      })
-    } catch(error) {console.log(error)
-  
+        uri: uri,
+      });
 
-    } 
-      
-
-      
+    } catch(error) {console.log(error)} 
+    
       Alert.alert(("Salvo com sucesso!"))
       setName('')
       setDescription('')
@@ -86,7 +94,6 @@ export function OrderForm() {
       setIsLoading(false)
       setLogo('')
     }
-    await saveOnStorage({ isConfigData: false, userId, logo, id } as any)
   }
 
 
