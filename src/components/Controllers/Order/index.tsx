@@ -6,7 +6,6 @@ import { getStorage, ref, deleteObject} from "firebase/storage";
 import { RemoveButton } from '../RemoveButton';
 
 import { Container, Box, TextTitle, ButtonContainer, ContainerLoader, TextDescription } from './styles';
-import { deleteFromStorage } from '../../../services/firebaseStorage';
 
 
 export type OrderProps = {
@@ -36,7 +35,6 @@ function Order({ data, userId, setItemDelete, handleGetItems }: Props) {
     const storage = getStorage();
     const storageRef = ref(storage, userId + '/' + item);
     await deleteObject(storageRef)
-    deleteFromStorage(item)
     handleGetItems
   }
 

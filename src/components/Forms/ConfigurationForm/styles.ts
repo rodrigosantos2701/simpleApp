@@ -7,8 +7,16 @@ export const Form = styled.View`
 export const Container = styled.View`
   width: 95%;
   align-items: flex-end;
-  margin-top: 0px
+  margin-top: 0px;
+`;
 
+export const SpinContainer = styled.View`
+  width: 95%;
+  height: 95%;
+  padding-top: 20%;
+  flex: 1;
+  align-content: center;
+  align-self: center;
 `;
 
 export const TextInfo = styled.Text`
