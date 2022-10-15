@@ -64,10 +64,22 @@ export function ConfigurationForm() {
   }
 
   async function handleSaveConfigurations() {
-    console.log('===>', ifExists)
-    console.log('===>', logo)
     setIsLoading(true)
-    
+
+    if (!logo) {
+
+      const firebaseRef = doc(firestore, userId, "config");
+      await updateDoc(firebaseRef, {
+        company,
+        description,
+        whats,
+        url,
+        uri,
+      });
+      setEditable(false)
+      setIsLoading(false)
+      alert('Atualizado com sucesso!')
+      }
     try{
       if (ifExists) {
         const storage = getStorage();
@@ -89,6 +101,7 @@ export function ConfigurationForm() {
         alert('Atualizado com sucesso!')
         
       } else {
+
         const storage = getStorage();
         const firebaseRef = doc(firestore, userId, "config");
         const storageRef = ref(storage, userId + '/' + "config");
