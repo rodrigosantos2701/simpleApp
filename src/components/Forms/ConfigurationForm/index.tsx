@@ -75,6 +75,7 @@ export function ConfigurationForm() {
         whats,
         url,
         uri,
+        config: true
       });
       setEditable(false)
       setIsLoading(false)
@@ -95,6 +96,7 @@ export function ConfigurationForm() {
           whats,
           url: logo,
           uri,
+          config: true
         });
         setEditable(false)
         setIsLoading(false)
@@ -115,6 +117,7 @@ export function ConfigurationForm() {
           whats,
           url: logo,
           uri,
+          config: true
         });
 
         setEditable(false)

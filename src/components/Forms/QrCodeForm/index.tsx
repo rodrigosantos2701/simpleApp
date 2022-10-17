@@ -16,7 +16,7 @@ type props = {
 export function QrCode({ userId }: props) {
   const [link, setLink] = useState('');
   const [qrcode, setQrcode] = useState('');
-  const [copiedText, setCopiedText] = useState('textLink/' + userId);
+  const [copiedText, setCopiedText] = useState('https://simpleapporderclientside.firebaseapp.com/?id=' + userId);
 
 
 

@@ -83,6 +83,7 @@ export function OrderForm() {
               price,
               url: logoPayload,
               uri: uri,
+              config: false,
             });
             Alert.alert(("Salvo com sucesso!"))
             setName('')
